@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:background="@drawable/bgfrontpage"
+    tools:context=".FrontPage" >
+
+    <ImageView
+        android:id="@+id/imgLogo"
+        android:layout_width="138dp"
+        android:layout_height="53dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.106"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.057"
+        app:srcCompat="@drawable/finseclogo_black_" />
+
+    <ImageView
+        android:id="@+id/imgVisa"
+        android:layout_width="550dp"
+        android:layout_height="400dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.309"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imgLogo"
+        app:layout_constraintVertical_bias="0.035"
+        app:srcCompat="@drawable/splashscreendesign" />
+
+    <TextView
+        android:id="@+id/txtTagline"
+        android:layout_width="341dp"
+        android:layout_height="107dp"
+        android:fontFamily="@font/gilroy_bold"
+        android:lineSpacingExtra="14sp"
+        android:text="Your Personal Finance Assistant"
+        android:textColor="#222222"
+        android:textSize="18pt"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.414"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imgVisa"
+        app:layout_constraintVertical_bias="0.111" />
+
+    <Button
+        android:id="@+id/btnSignIn"
+        android:layout_width="170dp"
+        android:layout_height="70dp"
+        android:backgroundTint="#222222"
+        android:fontFamily="@font/gilroy_bold"
+        android:text="Sign In"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        app:cornerRadius="27dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtTagline"
+        app:layout_constraintVertical_bias="0.136" />
+
+    <Button
+        android:id="@+id/line"
+        android:layout_width="65dp"
+        android:layout_height="15dp"
+        android:layout_marginBottom="24dp"
+        android:backgroundTint="#222222"
+        android:textColor="#222222"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.838"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/btnSignUp"
+        android:layout_width="113dp"
+        android:layout_height="41dp"
+        android:background="#00000000"
+        android:fontFamily="@font/gilroy_bold"
+        android:padding="0dp"
+        android:paddingStart="0dp"
+        android:paddingLeft="0dp"
+        android:paddingTop="0dp"
+        android:paddingEnd="0dp"
+        android:paddingRight="0dp"
+        android:paddingBottom="0dp"
+        android:text="Sign Up"
+        android:textAllCaps="false"
+        android:textColor="@color/button_text_color"
+        android:textSize="16sp"
+        app:iconPadding="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/line"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.889"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnSignIn"
+        app:layout_constraintVertical_bias="1.0" />
+</androidx.constraintlayout.widget.ConstraintLayout>

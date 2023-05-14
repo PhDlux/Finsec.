@@ -3,12 +3,14 @@ package com.example.finsec_finalfinalnajud;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -17,6 +19,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class HomePage extends AppCompatActivity {
     private int selectedTab = 1;
+
+    ImageButton btnFrame;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +39,7 @@ public class HomePage extends AppCompatActivity {
             }
         }
 
+
         final LinearLayout home = findViewById(R.id.homeLayout);
         final LinearLayout schedule = findViewById(R.id.scheduleLayout);
         final LinearLayout calcu = findViewById(R.id.calcuLayout);
@@ -52,7 +57,7 @@ public class HomePage extends AppCompatActivity {
 
         getSupportFragmentManager().beginTransaction()
                 .setReorderingAllowed(true)
-                .replace(R.id.fragmentContainer, HomePageFragment.class, null)
+                .replace(R.id.fragmentContainer, HomepageFragment.class, null)
                 .commit();
         home.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,7 +65,7 @@ public class HomePage extends AppCompatActivity {
                 if(selectedTab != 1) {
                     getSupportFragmentManager().beginTransaction()
                             .setReorderingAllowed(true)
-                            .replace(R.id.fragmentContainer, new HomePageFragment(), null)
+                            .replace(R.id.fragmentContainer, new HomepageFragment(), null)
                             .commit();
 
                     txtSched.setVisibility(View.GONE);
@@ -95,7 +100,7 @@ public class HomePage extends AppCompatActivity {
                 if(selectedTab != 2) {
                     getSupportFragmentManager().beginTransaction()
                             .setReorderingAllowed(true)
-                            .replace(R.id.fragmentContainer, ScheduleFragment.class, null)
+                            .replace(R.id.fragmentContainer, SchedulepageFragment.class, null)
                             .commit();
 
                     txtHome.setVisibility(View.GONE);
@@ -130,7 +135,7 @@ public class HomePage extends AppCompatActivity {
                 if(selectedTab != 3) {
                     getSupportFragmentManager().beginTransaction()
                             .setReorderingAllowed(true)
-                            .replace(R.id.fragmentContainer, new CalculatorFragment(), null)
+                            .replace(R.id.fragmentContainer, new CalculatorpageFragment(), null)
                             .commit();
 
                     txtHome.setVisibility(View.GONE);
@@ -165,7 +170,7 @@ public class HomePage extends AppCompatActivity {
                 if(selectedTab != 4) {
                     getSupportFragmentManager().beginTransaction()
                             .setReorderingAllowed(true)
-                            .replace(R.id.fragmentContainer, new AdvisorFragment(), null)
+                            .replace(R.id.fragmentContainer, new AdvisorpageFragment(), null)
                             .commit();
 
                     txtHome.setVisibility(View.GONE);

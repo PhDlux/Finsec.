@@ -3,16 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/homepage"
-    tools:context=".AdvisorFragment">
+    tools:context=".CalculatorpageFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="Advisor Page"
-        android:textSize="20sp"
-        android:textStyle="bold"/>
+        android:text="@string/hello_blank_fragment" />
 
 </FrameLayout>

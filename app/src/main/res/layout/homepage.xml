@@ -1,0 +1,465 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/homepagebg"
+    tools:context=".HomepageFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.494"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.07">
+
+            <ImageView
+                android:id="@+id/homepagelogo"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/homepagelogo" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="70dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/txthello"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:fontFamily="@font/nunitobold"
+                    android:text="Hello Lance!"
+                    android:textColor="#070707"
+                    android:textSize="10sp" />
+
+                <TextView
+                    android:id="@+id/txtwelcome"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:fontFamily="@font/nunitobold"
+                    android:text="Welcome Back!"
+                    android:textColor="#070707"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+
+            <ImageButton
+                android:id="@+id/imgbtnnotif"
+                android:layout_width="61dp"
+                android:layout_height="53dp"
+                android:background="#00FFFFFF"
+                android:src="@drawable/notiflogo" />
+
+
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/imgbtntotalsavings"
+            android:layout_width="298dp"
+            android:layout_height="219dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="#00FFFFFF"
+            android:backgroundTint="#00FFFFFF"
+            android:src="@drawable/totalsavingsframe1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
+            app:layout_constraintVertical_bias="0.049" />
+
+        <LinearLayout
+            android:layout_width="172dp"
+            android:layout_height="162dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/imgbtntotalsavings"
+            app:layout_constraintHorizontal_bias="0.269"
+            app:layout_constraintStart_toStartOf="@+id/imgbtntotalsavings"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
+            app:layout_constraintVertical_bias="0.138">
+
+            <TextView
+                android:id="@+id/txttotalsavings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nunitobold"
+                android:text="Total Savings"
+                android:textColor="#050505"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/txttotalsavingsnum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nunitobold"
+                android:text="₱18,678"
+                android:textColor="#070707"
+                android:textSize="28sp" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="20dp" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="20dp" />
+
+            <TextView
+                android:id="@+id/txtuser"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nunitobold"
+                android:text="Salera, Lance Vincent"
+                android:textColor="#090909"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/txtdate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nunitobold"
+                android:text="as of 08/05/2023"
+                android:textColor="#070707"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/txttoday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nunitobold"
+            android:text="Today"
+            android:textColor="#050505"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.117"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imgbtntotalsavings"
+            app:layout_constraintVertical_bias="0.038" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/imgbtnsavings"
+            app:layout_constraintHorizontal_bias="0.406"
+            app:layout_constraintStart_toStartOf="@+id/imgbtnsavings"
+            app:layout_constraintTop_toBottomOf="@+id/txttoday"
+            app:layout_constraintVertical_bias="0.0">
+
+            <TextView
+                android:id="@+id/txtsavingsarrow"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="⬆"
+                android:textColor="#2D9D94"
+                android:textSize="34sp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/txtsavings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nunitobold"
+                    android:text="Savings"
+                    android:textColor="#2D9D94"
+                    android:textSize="10sp" />
+
+                <TextView
+                    android:id="@+id/txtsavingsnum"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nunitobold"
+                    android:text="₱ 200.00"
+                    android:textColor="#2D9D94"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/txtbillreminders"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/nunitobold"
+            android:text="Bill Reminders"
+            android:textColor="#050505"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.145"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imgbtnsavings"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/imgbtnexpenses"
+            app:layout_constraintHorizontal_bias="0.457"
+            app:layout_constraintStart_toStartOf="@+id/imgbtnexpenses"
+            app:layout_constraintTop_toBottomOf="@+id/txttoday"
+            app:layout_constraintVertical_bias="0.0">
+
+            <TextView
+                android:id="@+id/txtexpensesarrow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:rotationX="-184"
+                android:scaleX="-1"
+                android:text="⬆"
+                android:textColor="#D62279"
+                android:textSize="34sp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/txtexpenses"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nunitobold"
+                    android:text="Expenses"
+                    android:textColor="#D62279"
+                    android:textSize="10sp" />
+
+                <TextView
+                    android:id="@+id/txtexpensesnum"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nunitobold"
+                    android:text="₱ 180.13"
+                    android:textColor="#D62279"
+                    android:textSize="14sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/imgbtnsavings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="80dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:background="#00FFFFFF"
+            android:elevation="-1dp"
+            android:src="@drawable/whiteframe"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/imgbtnexpenses"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imgbtntotalsavings"
+            app:layout_constraintVertical_bias="0.102" />
+
+        <ImageButton
+            android:id="@+id/imgbtnexpenses"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="80dp"
+            android:background="#00FFFFFF"
+            android:elevation="-1dp"
+            android:src="@drawable/whiteframe"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imgbtnsavings"
+            app:layout_constraintTop_toBottomOf="@+id/imgbtntotalsavings"
+            app:layout_constraintVertical_bias="0.102" />
+
+        <ScrollView
+            android:layout_width="413dp"
+            android:layout_height="200dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtbillreminders"
+            app:layout_constraintVertical_bias="0.156">
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/imgbill3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="20dp"
+                    android:elevation="-1dp"
+                    android:src="@drawable/whiteframe2"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/imgbill"
+                    app:srcCompat="@drawable/whiteframe2" />
+
+                <TextView
+                    android:id="@+id/txtbill2num2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
+                    android:fontFamily="@font/nunitobold"
+                    android:text="₱ 1799.00"
+                    android:textColor="#D62279"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.597"
+                    app:layout_constraintStart_toEndOf="@+id/txtbill4"
+                    app:layout_constraintTop_toBottomOf="@+id/imgbill2"
+                    app:layout_constraintVertical_bias="0.704" />
+
+                <TextView
+                    android:id="@+id/txtbill4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="104dp"
+                    android:fontFamily="@font/nunitobold"
+                    android:text="Wi-Fi"
+                    android:textColor="#222222"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/txtbill2num"
+                    app:layout_constraintHorizontal_bias="0.793"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/imgbill"
+                    app:layout_constraintVertical_bias="0.375" />
+
+                <TextView
+                    android:id="@+id/txtbill2num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nunitobold"
+                    android:text="₱ 180.13"
+                    android:textColor="#D62279"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/imgbill"
+                    app:layout_constraintHorizontal_bias="0.924"
+                    app:layout_constraintStart_toStartOf="@+id/imgbill"
+                    app:layout_constraintTop_toBottomOf="@+id/imgbill2"
+                    app:layout_constraintVertical_bias="0.191" />
+
+                <TextView
+                    android:id="@+id/txtbill2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nunitobold"
+                    android:text="Water Bill"
+                    android:textColor="#222222"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/txtbill2num"
+                    app:layout_constraintHorizontal_bias="0.215"
+                    app:layout_constraintStart_toStartOf="@+id/imgbill"
+                    app:layout_constraintTop_toBottomOf="@+id/imgbill2"
+                    app:layout_constraintVertical_bias="0.191" />
+
+                <ImageView
+                    android:id="@+id/imgbill2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:elevation="-1dp"
+                    android:src="@drawable/whiteframe2"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.496"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.0" />
+
+                <TextView
+                    android:id="@+id/txtbill1num2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nunitobold"
+                    android:text="₱ 200.00"
+                    android:textColor="#2D9D94"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/imgbill2"
+                    app:layout_constraintHorizontal_bias="0.924"
+                    app:layout_constraintStart_toStartOf="@+id/imgbill2"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.075" />
+
+                <ImageView
+                    android:id="@+id/imgbill"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:elevation="-1dp"
+                    android:src="@drawable/whiteframe2"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.496"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/imgbill2"
+                    app:layout_constraintVertical_bias="0.0"
+                    app:layout_constraintVertical_chainStyle="spread" />
+
+                <TextView
+                    android:id="@+id/txtbill1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nunitobold"
+                    android:text="Electric Bill"
+                    android:textColor="#222222"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/txtbill1num2"
+                    app:layout_constraintHorizontal_bias="0.235"
+                    app:layout_constraintStart_toStartOf="@+id/imgbill2"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.081" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</FrameLayout>

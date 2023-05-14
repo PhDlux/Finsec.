@@ -1,19 +1,22 @@
 package com.example.finsec_finalfinalnajud;
 
+import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link AdvisorFragment#newInstance} factory method to
+ * Use the {@link HomepageFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AdvisorFragment extends Fragment {
+public class HomepageFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -24,7 +27,7 @@ public class AdvisorFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public AdvisorFragment() {
+    public HomepageFragment() {
         // Required empty public constructor
     }
 
@@ -34,11 +37,11 @@ public class AdvisorFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment AdvisorFragment.
+     * @return A new instance of fragment homepage.
      */
     // TODO: Rename and change types and number of parameters
-    public static AdvisorFragment newInstance(String param1, String param2) {
-        AdvisorFragment fragment = new AdvisorFragment();
+    public static HomepageFragment newInstance(String param1, String param2) {
+        HomepageFragment fragment = new HomepageFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -53,12 +56,28 @@ public class AdvisorFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_advisor, container, false);
+        return inflater.inflate(R.layout.homepage, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+
+        ImageButton btnFrame = view.findViewById(R.id.imgbtntotalsavings);
+        btnFrame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getActivity(), GoalSavings.class);
+                startActivity(i);
+            }
+        });
     }
 }

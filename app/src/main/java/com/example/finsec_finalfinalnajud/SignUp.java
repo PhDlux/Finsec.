@@ -3,6 +3,7 @@ package com.example.finsec_finalfinalnajud;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -74,7 +75,7 @@ public class SignUp extends AppCompatActivity {
                     RadioButton rbSelected = (RadioButton) findViewById(bgGender.getCheckedRadioButtonId());
                     gender = rbSelected.getText().toString();
                 } else {
-                    gender = null;
+                    gender = "";
                 }
 
                 String fname = etFname.getText().toString();
@@ -84,7 +85,7 @@ public class SignUp extends AppCompatActivity {
                 String email = etEmail.getText().toString();
                 String password = etPassword.getText().toString();
                 String repass = etRepass.getText().toString();
-                if (gender.isEmpty() && fname.isEmpty() && lname.isEmpty() && dateofbirth.isEmpty() && contactNumber.isEmpty() && email.isEmpty() && password.isEmpty()) {
+                if (gender.isEmpty() || fname.isEmpty() || lname.isEmpty() || dateofbirth.isEmpty() || contactNumber.isEmpty() || email.isEmpty() || password.isEmpty()) {
                     Toast.makeText(SignUp.this, "All fields required", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -103,7 +104,8 @@ public class SignUp extends AppCompatActivity {
                             User u = new User(gender, fname, lname, dateofbirth, contactNumber, password);
                             dbFinsec.child("users").child(encodeEmail).setValue(u);
                             Toast.makeText(SignUp.this, "Registration Successful!", Toast.LENGTH_SHORT).show();
-                            finish();
+                            Intent i = new Intent(SignUp.this, HomePage.class);
+                            startActivity(i);
                         }
                     }
 

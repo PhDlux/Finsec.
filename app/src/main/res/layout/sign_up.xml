@@ -40,125 +40,69 @@
         android:paddingLeft="15dp"
         android:textColorHint="#222222"
         android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/etEmail"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etDay"
-        app:layout_constraintVertical_bias="0.643" />
-
-    <EditText
-        android:id="@+id/etDay"
-        android:layout_width="50dp"
-        android:layout_height="42dp"
-        android:background="@drawable/small_edit_text_inputs"
-        android:elevation="8dp"
-        android:ems="10"
-        android:fontFamily="@font/nunitosans"
-        android:hint="DD"
-        android:inputType="number"
-        android:paddingLeft="13dp"
-        android:textColorHint="#222222"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.048"
-        app:layout_constraintStart_toEndOf="@+id/txtDob"
-        app:layout_constraintTop_toBottomOf="@+id/etFName"
-        app:layout_constraintVertical_bias="0.043" />
-
-    <EditText
-        android:id="@+id/etMonth"
-        android:layout_width="50dp"
-        android:layout_height="42dp"
-        android:background="@drawable/small_edit_text_inputs"
-        android:elevation="8dp"
-        android:ems="10"
-        android:fontFamily="@font/nunitosans"
-        android:hint="MM"
-        android:inputType="number"
-        android:paddingLeft="11dp"
-        android:textColorHint="#222222"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.082"
-        app:layout_constraintStart_toEndOf="@+id/etDay"
-        app:layout_constraintTop_toBottomOf="@+id/etLName"
-        app:layout_constraintVertical_bias="0.043" />
-
-    <EditText
-        android:id="@+id/etYear"
-        android:layout_width="70dp"
-        android:layout_height="42dp"
-        android:background="@drawable/small_edit_text_inputs"
-        android:elevation="8dp"
-        android:ems="10"
-        android:fontFamily="@font/nunitosans"
-        android:hint="YYYY"
-        android:inputType="number"
-        android:paddingLeft="15dp"
-        android:textColorHint="#222222"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.238"
-        app:layout_constraintStart_toEndOf="@+id/etMonth"
-        app:layout_constraintTop_toBottomOf="@+id/etLName"
-        app:layout_constraintVertical_bias="0.043" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+        app:layout_constraintVertical_bias="0.056" />
 
     <TextView
         android:id="@+id/txtDob"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="14dp"
         android:fontFamily="@font/nunitosans"
         android:text="Date of Birth"
         android:textColor="#222222"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.217"
+        app:layout_constraintEnd_toStartOf="@+id/linearLayout"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etFName"
-        app:layout_constraintVertical_bias="0.065" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout5"
+        app:layout_constraintVertical_bias="0.054" />
 
-    <EditText
-        android:id="@+id/etLName"
-        android:layout_width="155dp"
-        android:layout_height="42dp"
-        android:background="@drawable/edit_text_inner_shadow"
-        android:elevation="8dp"
-        android:ems="10"
-        android:fontFamily="@font/nunitosans"
-        android:hint="Last Name"
-        android:inputType="textPersonName"
-        android:paddingLeft="15dp"
-        android:textColorHint="#222222"
-        android:textSize="16sp"
+    <LinearLayout
+        android:id="@+id/linearLayout5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="7dp"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.812"
+        app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bgGender"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.0">
 
-    <EditText
-        android:id="@+id/etFName"
-        android:layout_width="155dp"
-        android:layout_height="42dp"
-        android:background="@drawable/edit_text_inner_shadow"
-        android:elevation="8dp"
-        android:ems="10"
-        android:fontFamily="@font/nunitosans"
-        android:hint="First Name"
-        android:inputType="textPersonName"
-        android:paddingLeft="15dp"
-        android:textColorHint="#222222"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.187"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bgGender"
-        app:layout_constraintVertical_bias="0.0" />
+        <EditText
+            android:id="@+id/etFName"
+            android:layout_width="155dp"
+            android:layout_height="42dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/edit_text_inner_shadow"
+            android:elevation="8dp"
+            android:ems="10"
+            android:fontFamily="@font/nunitosans"
+            android:hint="First Name"
+            android:inputType="textPersonName"
+            android:paddingLeft="15dp"
+            android:textColorHint="#222222"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/etLName"
+            android:layout_width="155dp"
+            android:layout_height="42dp"
+            android:background="@drawable/edit_text_inner_shadow"
+            android:elevation="8dp"
+            android:ems="10"
+            android:fontFamily="@font/nunitosans"
+            android:hint="Last Name"
+            android:inputType="textPersonName"
+            android:paddingLeft="15dp"
+            android:textColorHint="#222222"
+            android:textSize="16sp" />
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/imgSignInLogo"
@@ -169,7 +113,7 @@
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.122"
+        app:layout_constraintVertical_bias="0.127"
         app:srcCompat="@drawable/finseclogo_black_" />
 
     <TextView
@@ -182,10 +126,10 @@
         android:textSize="15pt"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imgSignInLogo"
-        app:layout_constraintVertical_bias="0.056" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <EditText
         android:id="@+id/etEmail"
@@ -203,8 +147,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtLogin"
-        app:layout_constraintVertical_bias="0.479" />
+        app:layout_constraintTop_toBottomOf="@+id/etContactNumber"
+        app:layout_constraintVertical_bias="0.076" />
 
     <Button
         android:id="@+id/btnCreateAccount"
@@ -222,7 +166,7 @@
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/etRepass"
-        app:layout_constraintVertical_bias="0.327" />
+        app:layout_constraintVertical_bias="0.293" />
 
     <EditText
         android:id="@+id/etPassword"
@@ -248,11 +192,11 @@
         android:layout_width="201dp"
         android:layout_height="53dp"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/etEmail"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtLogin"
-        app:layout_constraintVertical_bias="0.068">
+        app:layout_constraintVertical_bias="0.0">
 
         <RadioButton
             android:id="@+id/rbMale"
@@ -283,5 +227,79 @@
             android:textSize="16sp" />
 
     </RadioGroup>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.1" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.9" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="200dp"
+        android:layout_height="55dp"
+        android:background="#00FFFFFF"
+        android:backgroundTint="#00FFFFFF"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.772"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout5"
+        app:layout_constraintVertical_bias="0.023">
+
+        <EditText
+            android:id="@+id/etMonth"
+            android:layout_width="50dp"
+            android:layout_height="42dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/small_edit_text_inputs"
+            android:elevation="8dp"
+            android:ems="10"
+            android:fontFamily="@font/nunitosans"
+            android:hint="MM"
+            android:inputType="number"
+            android:paddingLeft="11dp"
+            android:textColorHint="#222222"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/etDay"
+            android:layout_width="50dp"
+            android:layout_height="42dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/small_edit_text_inputs"
+            android:elevation="8dp"
+            android:ems="10"
+            android:fontFamily="@font/nunitosans"
+            android:hint="DD"
+            android:inputType="number"
+            android:paddingLeft="13dp"
+            android:textColorHint="#222222"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/etYear"
+            android:layout_width="70dp"
+            android:layout_height="42dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/small_edit_text_inputs"
+            android:elevation="8dp"
+            android:ems="10"
+            android:fontFamily="@font/nunitosans"
+            android:hint="YYYY"
+            android:inputType="number"
+            android:paddingLeft="15dp"
+            android:textColorHint="#222222"
+            android:textSize="16sp" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,14 +1,25 @@
 package com.example.finsec_finalfinalnajud;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class SignIn extends AppCompatActivity {
-
+    DatabaseReference dbFinsec = FirebaseDatabase.getInstance().getReferenceFromUrl("https://finsec-14c51-default-rtdb.firebaseio.com/");
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,6 +38,49 @@ public class SignIn extends AppCompatActivity {
                 }
             }
         }
+
+        EditText email = (EditText) findViewById(R.id.etEmailLogin);
+        EditText pass = (EditText) findViewById(R.id.etPasswordLogin);
+        Button btnLogin = (Button) findViewById(R.id.btnLogin);
+
+        btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String em = email.getText().toString();
+                String password = pass.getText().toString();
+
+                if(em.isEmpty() || password.isEmpty()) {
+                    Toast.makeText(SignIn.this, "All fields required", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                String encodedEmail = em.replace(".", "_");
+                dbFinsec.child("users").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if(snapshot.hasChild(encodedEmail)) {
+                            String getPassword = snapshot.child(encodedEmail).child("password").getValue(String.class);
+
+                            if(getPassword.equals(password)) {
+                                Toast.makeText(SignIn.this, "Logged in Succesfully", Toast.LENGTH_SHORT).show();
+                                Intent i = new Intent(SignIn.this, HomePage.class);
+                                startActivity(i);
+                            } else {
+                                Toast.makeText(SignIn.this, "Wrong password", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(SignIn.this, "Wrong email", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+        });
+
     }
 
     public static boolean isColorDark(int color) {

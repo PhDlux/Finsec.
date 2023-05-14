@@ -2,6 +2,7 @@ package com.example.finsec_finalfinalnajud;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,8 +13,22 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 public class CustomDialog extends AppCompatDialogFragment {
-    private EditText etGoalName;
+    private EditText etGoalSavings;
+    DatabaseReference dbFinsec = FirebaseDatabase.getInstance().getReferenceFromUrl("https://finsec-14c51-default-rtdb.firebaseio.com/");
+
+    public static CustomDialog newInstance(String message) {
+        CustomDialog fragment = new CustomDialog();
+
+        Bundle args = new Bundle();
+        args.putString("email4", message);
+        fragment.setArguments(args);
+
+        return fragment;
+    }
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -23,22 +38,26 @@ public class CustomDialog extends AppCompatDialogFragment {
 
         View v = inflater.inflate(R.layout.custom_dialog, null);
 
-        builder.setView(v)
-                .setTitle("New Goal")
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
 
-                    }
-                })
-                .setPositiveButton("Add", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
+        if(getArguments() != null) {
+            String email5 = getArguments().getString("email4");
+            builder.setView(v)
+                    .setTitle("New Goal")
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
 
-                    }
-                });
-
-        etGoalName = v.findViewById(R.id.editTextTextPersonName);
+                        }
+                    })
+                    .setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            double savings = Double.parseDouble(etGoalSavings.getText().toString());
+                            dbFinsec.child("users").child(email5).child("goalsavings").child("goal").setValue(savings);
+                        }
+                    });
+        }
+                etGoalSavings = v.findViewById(R.id.etGoalSavings);
                 return builder.create();
     }
 }

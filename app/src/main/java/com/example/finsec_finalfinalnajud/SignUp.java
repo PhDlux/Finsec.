@@ -105,6 +105,8 @@ public class SignUp extends AppCompatActivity {
                             dbFinsec.child("users").child(encodeEmail).setValue(u);
                             Toast.makeText(SignUp.this, "Registration Successful!", Toast.LENGTH_SHORT).show();
                             Intent i = new Intent(SignUp.this, HomePage.class);
+                            i.putExtra("email", encodeEmail);
+
                             startActivity(i);
                         }
                     }

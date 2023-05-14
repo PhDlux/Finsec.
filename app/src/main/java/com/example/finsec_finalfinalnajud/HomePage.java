@@ -55,9 +55,16 @@ public class HomePage extends AppCompatActivity {
         final TextView txtCalcu = findViewById(R.id.txtCalculator);
         final TextView txtAdvisor = findViewById(R.id.txtAdvisor);
 
+        String em = getIntent().getStringExtra("email");
+        HomepageFragment hp = new HomepageFragment();
+
+        Bundle args = new Bundle();
+        args.putString("email1", em);
+        hp.setArguments(args);
+
         getSupportFragmentManager().beginTransaction()
                 .setReorderingAllowed(true)
-                .replace(R.id.fragmentContainer, HomepageFragment.class, null)
+                .replace(R.id.fragmentContainer, hp, null)
                 .commit();
         home.setOnClickListener(new View.OnClickListener() {
             @Override

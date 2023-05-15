@@ -37,10 +37,10 @@ public class CalculatorpageFragment extends Fragment implements View.OnClickList
         resultTv = view.findViewById(R.id.result_tv);
         solutionTv = view.findViewById(R.id.solution_tv);
 
-        assignId(view, buttonC, R.id.button_c2);
-        assignId(view,buttonBrackOpen,R.id.button_open_bracket2);
-        assignId(view,buttonBrackClose,R.id.button_close_bracket2);
-        assignId(view,buttonDivide,R.id.button_divide2);
+        assignId(view, buttonC, R.id.button_c);
+        assignId(view,buttonBrackOpen,R.id.button_open_bracket);
+        assignId(view,buttonBrackClose,R.id.button_close_bracket);
+        assignId(view,buttonDivide,R.id.button_divide);
         assignId(view,buttonMultiply,R.id.button_multiply);
         assignId(view,buttonPlus,R.id.button_plus);
         assignId(view,buttonMinus,R.id.button_minus);

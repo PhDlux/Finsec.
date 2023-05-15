@@ -59,7 +59,7 @@ public class SignIn extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if(snapshot.hasChild(encodedEmail)) {
-                            String getPassword = snapshot.child(encodedEmail).child("password").getValue(String.class);
+                                    String getPassword = snapshot.child(encodedEmail).child("password").getValue(String.class);
 
                             if(getPassword.equals(password)) {
                                 Toast.makeText(SignIn.this, "Logged in Succesfully", Toast.LENGTH_SHORT).show();

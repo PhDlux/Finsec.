@@ -19,6 +19,7 @@ import com.google.firebase.database.FirebaseDatabase;
 public class CustomDialog extends AppCompatDialogFragment {
     private EditText etGoalSavings;
     DatabaseReference dbFinsec = FirebaseDatabase.getInstance().getReferenceFromUrl("https://finsec-14c51-default-rtdb.firebaseio.com/");
+    CustomDialogListener listener;
 
     public static CustomDialog newInstance(String message) {
         CustomDialog fragment = new CustomDialog();
@@ -54,10 +55,28 @@ public class CustomDialog extends AppCompatDialogFragment {
                         public void onClick(DialogInterface dialogInterface, int i) {
                             double savings = Double.parseDouble(etGoalSavings.getText().toString());
                             dbFinsec.child("users").child(email5).child("goalsavings").child("goal").setValue(savings);
+                            listener.applyChanges(savings);
                         }
                     });
         }
                 etGoalSavings = v.findViewById(R.id.etGoalSavings);
                 return builder.create();
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+
+        try {
+            listener = (CustomDialogListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() +
+                    "must implement CustomDialogListener");
+        }
+
+    }
+
+    public interface CustomDialogListener {
+        void applyChanges(double savings);
     }
 }

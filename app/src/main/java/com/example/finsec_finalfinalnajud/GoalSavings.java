@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -19,16 +20,22 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.NumberFormat;
 
-public class GoalSavings extends AppCompatActivity implements View.OnClickListener {
+public class GoalSavings extends AppCompatActivity implements View.OnClickListener, CustomDialog.CustomDialogListener {
     TextView txtGoal;
     DatabaseReference dbFinsec = FirebaseDatabase.getInstance().getReferenceFromUrl("https://finsec-14c51-default-rtdb.firebaseio.com/");
     String email3;
+    LinearLayout layoutlist;
+    Button btnAddSavings;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.goal_savings);
 
         Button back = (Button) findViewById(R.id.btnGoalSavingsBack);
+        layoutlist = (LinearLayout) findViewById(R.id.layout_list);
+        btnAddSavings = (Button) findViewById(R.id.btnAddSavings);
+
+        btnAddSavings.setOnClickListener(this);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -45,12 +52,10 @@ public class GoalSavings extends AppCompatActivity implements View.OnClickListen
         dbFinsec.child("users").child(email3).child("goalsavings").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                NumberFormat n = NumberFormat.getInstance();
-                n.setMaximumFractionDigits(2);
-                n.setMinimumFractionDigits(2);
+
                 if(snapshot.hasChild("goal")) {
                     double getSavings = snapshot.child("goal").getValue(Double.class);
-                    txtGoal.setText("₱ " + n.format(getSavings));
+                    applyChanges(getSavings);
                 }
 
             }
@@ -84,8 +89,14 @@ public class GoalSavings extends AppCompatActivity implements View.OnClickListen
 
     @Override
     public void onClick(View view) {
-
+        addView();
     }
+
+    private void addView() {
+        View addsavingsview = getLayoutInflater().inflate(R.layout.add_savings, null, false);
+        layoutlist.addView(addsavingsview, 0);
+    }
+
     public static boolean isColorDark(int color) {
         double darkness = 1 - (0.299 * Color.red(color) + 0.587 * Color.green(color) + 0.114 * Color.blue(color)) / 255;
         return darkness >= 0.5;
@@ -94,5 +105,13 @@ public class GoalSavings extends AppCompatActivity implements View.OnClickListen
     public void openDialog() {
         CustomDialog c = CustomDialog.newInstance(email3);
         c.show(getSupportFragmentManager(), "Custom Dialog");
+    }
+
+    @Override
+    public void applyChanges(double savings) {
+        NumberFormat n = NumberFormat.getInstance();
+        n.setMaximumFractionDigits(2);
+        n.setMinimumFractionDigits(2);
+        txtGoal.setText(n.format(savings));
     }
 }

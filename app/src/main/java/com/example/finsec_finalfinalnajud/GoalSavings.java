@@ -20,7 +20,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.NumberFormat;
 
-public class GoalSavings extends AppCompatActivity implements View.OnClickListener, CustomDialog.CustomDialogListener {
+public class GoalSavings extends AppCompatActivity implements View.OnClickListener, CustomDialog.CustomDialogListener, AnotherCustomDialog.AnotherCustomDialogListener {
     TextView txtGoal;
     DatabaseReference dbFinsec = FirebaseDatabase.getInstance().getReferenceFromUrl("https://finsec-14c51-default-rtdb.firebaseio.com/");
     String email3;
@@ -114,5 +114,10 @@ public class GoalSavings extends AppCompatActivity implements View.OnClickListen
         n.setMaximumFractionDigits(2);
         n.setMinimumFractionDigits(2);
         txtGoal.setText(n.format(savings));
+    }
+
+    @Override
+    public void applyChanges(String name, double savings) {
+        addView();
     }
 }

@@ -20,7 +20,7 @@ public class AnotherCustomDialog extends AppCompatDialogFragment {
     private EditText etSavingsAdded;
     private EditText etGoalName;
     DatabaseReference dbFinsec = FirebaseDatabase.getInstance().getReferenceFromUrl("https://finsec-14c51-default-rtdb.firebaseio.com/");
-//    CustomDialogListener listener;
+    AnotherCustomDialogListener listener;
 
     public static AnotherCustomDialog newInstance(String message) {
         AnotherCustomDialog fragment = new AnotherCustomDialog();
@@ -56,8 +56,9 @@ public class AnotherCustomDialog extends AppCompatDialogFragment {
                         public void onClick(DialogInterface dialogInterface, int i) {
                             String name = etGoalName.getText().toString();
                             double savings = Double.parseDouble(etSavingsAdded.getText().toString());
-//                            dbFinsec.child("users").child(email6).child("goalsavings").child("goal").setValue(savings);
-//                            listener.applyChanges(savings);
+                            dbFinsec.child("users").child(email6).child("goalsavings").child("goal").child("goalname").setValue(name);
+                            dbFinsec.child("users").child(email6).child("goalsavings").child("goal").child("savings").setValue(savings);
+                            listener.applyChanges(name, savings);
                         }
                     });
         }
@@ -66,20 +67,20 @@ public class AnotherCustomDialog extends AppCompatDialogFragment {
         return builder.create();
     }
 
-//    @Override
-//    public void onAttach(@NonNull Context context) {
-//        super.onAttach(context);
-//
-//        try {
-//            listener = (CustomDialogListener) context;
-//        } catch (ClassCastException e) {
-//            throw new ClassCastException(context.toString() +
-//                    "must implement CustomDialogListener");
-//        }
-//
-//    }
-//
-//    public interface CustomDialogListener {
-//        void applyChanges(double savings);
-//    }
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+
+        try {
+            listener = (AnotherCustomDialogListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() +
+                    "must implement AnotherCustomDialogListener");
+        }
+
+    }
+
+    public interface AnotherCustomDialogListener {
+        void applyChanges(String name, double savings);
+    }
 }

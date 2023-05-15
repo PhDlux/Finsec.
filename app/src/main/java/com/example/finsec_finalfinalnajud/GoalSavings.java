@@ -89,7 +89,8 @@ public class GoalSavings extends AppCompatActivity implements View.OnClickListen
 
     @Override
     public void onClick(View view) {
-        addView();
+        AnotherCustomDialog a = AnotherCustomDialog.newInstance(email3);
+        a.show(getSupportFragmentManager(), "Add Savings");
     }
 
     private void addView() {

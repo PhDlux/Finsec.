@@ -54,7 +54,8 @@ public class AnotherCustomDialog extends AppCompatDialogFragment {
                     .setPositiveButton("Add", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-//                            double savings = Double.parseDouble(etGoalSavings.getText().toString());
+                            String name = etGoalName.getText().toString();
+                            double savings = Double.parseDouble(etSavingsAdded.getText().toString());
 //                            dbFinsec.child("users").child(email6).child("goalsavings").child("goal").setValue(savings);
 //                            listener.applyChanges(savings);
                         }

@@ -26,6 +26,7 @@ import org.w3c.dom.Text;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.Locale;
 
 public class GoalSavings extends AppCompatActivity implements View.OnClickListener {
     TextView txtGoal;
@@ -63,6 +64,13 @@ public class GoalSavings extends AppCompatActivity implements View.OnClickListen
                 if(snapshot.hasChild("goal")) {
                     double getSavings = snapshot.child("goal").getValue(Double.class);
                     setTxtGoal(getSavings);
+                    String num = txtGoal.getText().toString().substring(1);
+                    try {
+                        goal = NumberFormat.getInstance(Locale.US).parse(num).toString();
+                        System.out.println(goal);
+                    } catch (ParseException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
 
             }

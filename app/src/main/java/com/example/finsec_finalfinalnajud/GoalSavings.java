@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -30,6 +31,8 @@ import java.util.Locale;
 
 public class GoalSavings extends AppCompatActivity implements View.OnClickListener {
     TextView txtGoal;
+    TextView txtCurrentSavings;
+    TextView txtTotalCurrentSavings;
     DatabaseReference dbFinsec = FirebaseDatabase.getInstance().getReferenceFromUrl("https://finsec-14c51-default-rtdb.firebaseio.com/");
     String email3;
     LinearLayout layoutlist;
@@ -49,6 +52,8 @@ public class GoalSavings extends AppCompatActivity implements View.OnClickListen
         email3 = i.getStringExtra("email2");
 
         txtGoal = (TextView) findViewById(R.id.txtGoal);
+        txtTotalCurrentSavings = (TextView ) findViewById(R.id.txtTotalCurrentSavings);
+        txtCurrentSavings = findViewById(R.id.txtCurrentSavings);
         Button newGoal = (Button) findViewById(R.id.btnNewGoal);
 
         btnAddSavings.setOnClickListener(this);
@@ -111,7 +116,9 @@ public class GoalSavings extends AppCompatActivity implements View.OnClickListen
                     public void onClick(DialogInterface dialogInterface, int i) {
                         double savings = Double.parseDouble(etSavingsAdded.getText().toString());
                         try {
+                            NumberFormat n = NumberFormat.getInstance();
 
+                            double temp = n.parse(txtCurrentSavings.getText().toString().substring(1)).doubleValue();
                             double goals = Double.parseDouble(goal);
                             int percent;
                             System.out.println(goals);
@@ -121,9 +128,12 @@ public class GoalSavings extends AppCompatActivity implements View.OnClickListen
                                 throw new IllegalArgumentException();
                             }
 
+                            setTxtCurrentSavings(temp + savings);
                             addView(etGoal.getText().toString(), Double.parseDouble(etSavingsAdded.getText().toString()), percent);
                         } catch (IllegalArgumentException il) {
                             Toast.makeText(GoalSavings.this, "Savings cannot be greater than goal",Toast.LENGTH_SHORT).show();
+                        } catch (ParseException e) {
+                            throw new RuntimeException(e);
                         }
                     }
                 })
@@ -172,6 +182,9 @@ public class GoalSavings extends AppCompatActivity implements View.OnClickListen
                 newGoalDialog.show();
                 break;
             case R.id.btnGoalSavingsBack:
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra("totalCurrentSavings", txtTotalCurrentSavings.getText().toString());
+                setResult(Activity.RESULT_OK, returnIntent);
                 finish();
                 break;
         }
@@ -203,6 +216,13 @@ public class GoalSavings extends AppCompatActivity implements View.OnClickListen
         txtGoal.setText("₱ " + n.format(goal));
     }
 
+    public void setTxtCurrentSavings(double savings) {
+        NumberFormat n = NumberFormat.getInstance();
+        n.setMaximumFractionDigits(2);
+        n.setMinimumFractionDigits(2);
+        txtCurrentSavings.setText("₱ " + n.format(savings));
+        txtTotalCurrentSavings.setText("₱ " + n.format(savings));
+    }
     public static boolean isColorDark(int color) {
         double darkness = 1 - (0.299 * Color.red(color) + 0.587 * Color.green(color) + 0.114 * Color.blue(color)) / 255;
         return darkness >= 0.5;

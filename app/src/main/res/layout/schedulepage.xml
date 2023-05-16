@@ -55,8 +55,8 @@
 
         <ImageButton
             android:id="@+id/imgbtnbudget"
-            android:layout_width="167dp"
-            android:layout_height="72dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginTop="28dp"
             android:layout_marginEnd="17dp"
@@ -65,6 +65,7 @@
             android:src="@drawable/whiteframe"
             app:layout_constraintBottom_toTopOf="@+id/imgsalary"
             app:layout_constraintEnd_toStartOf="@+id/imgbtnexpenses2"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/calendarView" />
 
@@ -78,10 +79,10 @@
             android:textColor="#2D9D94"
             app:layout_constraintBottom_toTopOf="@+id/txtbudgetnum"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.213"
+            app:layout_constraintHorizontal_bias="0.252"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/calendarView"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintVertical_bias="1.0" />
 
         <TextView
             android:id="@+id/txtsalarynum"
@@ -109,28 +110,27 @@
             android:layout_marginEnd="3dp"
             android:text="⬆"
             android:textColor="#2D9D94"
-            android:textSize="50sp"
+            android:textSize="40sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/txtbudget"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/calendarView"
-            app:layout_constraintVertical_bias="0.028" />
+            app:layout_constraintVertical_bias="0.048" />
 
         <ImageButton
             android:id="@+id/imgbtnexpenses2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="28dp"
-            android:layout_marginEnd="32dp"
             android:background="#00FFFFFF"
             android:src="@drawable/whiteframe"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/txtbudget"
+            app:layout_constraintHorizontal_bias="0.894"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/calendarView"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintVertical_bias="0.004" />
 
         <TextView
             android:id="@+id/txtexpenses1"
@@ -146,7 +146,7 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/txtexpensesnum1"
             app:layout_constraintTop_toBottomOf="@+id/calendarView"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintVertical_bias="0.017" />
 
         <TextView
             android:id="@+id/txtexpensesnum1"
@@ -157,13 +157,13 @@
             android:fontFamily="@font/nunitobold"
             android:text="₱ 180.13"
             android:textColor="#D62279"
-            android:textSize="20sp"
+            android:textSize="17sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="@+id/imgbtnexpenses2"
             app:layout_constraintTop_toBottomOf="@+id/calendarView"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintVertical_bias="0.015" />
 
         <TextView
             android:id="@+id/txtexpensesarrow1"
@@ -173,13 +173,13 @@
             android:scaleX="-1"
             android:text="⬆"
             android:textColor="#D62279"
-            android:textSize="50sp"
+            android:textSize="40sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/txtexpenses1"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="@+id/imgbtnexpenses2"
             app:layout_constraintTop_toBottomOf="@+id/calendarView"
-            app:layout_constraintVertical_bias="0.077" />
+            app:layout_constraintVertical_bias="0.102" />
 
         <TextView
             android:id="@+id/txtbudgetnum"
@@ -190,13 +190,13 @@
             android:fontFamily="@font/nunitobold"
             android:text="₱ 200.00"
             android:textColor="#2D9D94"
-            android:textSize="20sp"
+            android:textSize="17sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/imgbtnbudget"
-            app:layout_constraintHorizontal_bias="0.026"
+            app:layout_constraintHorizontal_bias="0.24"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/calendarView"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintVertical_bias="0.015" />
 
         <TextView
             android:id="@+id/txtfoodnum"

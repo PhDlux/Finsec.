@@ -83,7 +83,14 @@ public class CalculatorpageFragment extends Fragment implements View.OnClickList
         }
         if(buttonText.equals("C")){
             if (!dataToCalculate.isEmpty()) {
+                if(dataToCalculate.length()-1 == 0) {
+                    solutionTv.setText("");
+                    resultTv.setText("0");
+                    return;
+                }
                 dataToCalculate = dataToCalculate.substring(0,dataToCalculate.length()-1);
+            } else {
+                return;
             }
         } else {
             dataToCalculate = dataToCalculate+buttonText;

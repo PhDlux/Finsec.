@@ -57,29 +57,29 @@ public class GoalSavings extends AppCompatActivity implements View.OnClickListen
 
         buildNewGoalDialog();
         buildAddSavingsDialog();
-        dbFinsec.child("users").child(email3).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                if(snapshot.hasChild("goal")) {
-                    double getSavings = snapshot.child("goal").getValue(Double.class);
-                    setTxtGoal(getSavings);
-                    String num = txtGoal.getText().toString().substring(1);
-                    try {
-                        goal = NumberFormat.getInstance(Locale.US).parse(num).toString();
-                        System.out.println(goal);
-                    } catch (ParseException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
+//        dbFinsec.child("users").child(email3).addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//
+//                if(snapshot.hasChild("goal")) {
+//                    double getSavings = snapshot.child("goal").getValue(Double.class);
+//                    setTxtGoal(getSavings);
+//                    String num = txtGoal.getText().toString().substring(1);
+//                    try {
+//                        goal = NumberFormat.getInstance(Locale.US).parse(num).toString();
+//                        System.out.println(goal);
+//                    } catch (ParseException e) {
+//                        throw new RuntimeException(e);
+//                    }
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
 
 
 
@@ -150,7 +150,7 @@ public class GoalSavings extends AppCompatActivity implements View.OnClickListen
                         setTxtGoal(Double.parseDouble(etGoalSavings.getText().toString()));
 
                         goal = etGoalSavings.getText().toString();
-                        dbFinsec.child("users").child(email3).child("goal").setValue(Double.parseDouble(etGoalSavings.getText().toString()));
+//                        dbFinsec.child("users").child(email3).child("goal").setValue(Double.parseDouble(etGoalSavings.getText().toString()));
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -171,7 +171,7 @@ public class GoalSavings extends AppCompatActivity implements View.OnClickListen
             case R.id.btnNewGoal:
                 newGoalDialog.show();
                 break;
-            case R.id.back:
+            case R.id.btnGoalSavingsBack:
                 finish();
                 break;
         }

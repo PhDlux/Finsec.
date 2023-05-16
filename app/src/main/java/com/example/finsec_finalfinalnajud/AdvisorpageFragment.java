@@ -1,10 +1,16 @@
 package com.example.finsec_finalfinalnajud;
 
+import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 /**
@@ -13,7 +19,80 @@ import androidx.fragment.app.Fragment;
  * create an instance of this fragment.
  */
 public class AdvisorpageFragment extends Fragment {
+    ImageButton popupBTN;
+    Dialog mDialog;
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        popupBTN = view.findViewById(R.id.imgbtnchinkee);
+        mDialog=new Dialog(requireContext());
+
+        popupBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mDialog.setContentView(R.layout.advisorypopupchinkee);
+                mDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                mDialog.show();
+            }
+        });
+        popupBTN = view.findViewById(R.id.imgbtnfitz);
+        mDialog=new Dialog(requireContext());
+
+        popupBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mDialog.setContentView(R.layout.advisorypopupfitz);
+                mDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                mDialog.show();
+            }
+        });
+        popupBTN = view.findViewById(R.id.imgbtnrandell);
+        mDialog=new Dialog(requireContext());
+
+        popupBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mDialog.setContentView(R.layout.advisorypopuprandell);
+                mDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                mDialog.show();
+            }
+        });
+        popupBTN = view.findViewById(R.id.imgbtnwarren);
+        mDialog=new Dialog(requireContext());
+
+        popupBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mDialog.setContentView(R.layout.advisorypopupwarren);
+                mDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                mDialog.show();
+            }
+        });
+        popupBTN = view.findViewById(R.id.imgbtnpeter);
+        mDialog=new Dialog(requireContext());
+
+        popupBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mDialog.setContentView(R.layout.advisorypopuppeter);
+                mDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                mDialog.show();
+            }
+        });
+        popupBTN = view.findViewById(R.id.imgbtntaylor);
+        mDialog=new Dialog(requireContext());
+
+        popupBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mDialog.setContentView(R.layout.advisorypopuptaylor);
+                mDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                mDialog.show();
+            }
+        });
+    }
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";

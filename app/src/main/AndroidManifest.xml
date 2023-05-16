@@ -12,6 +12,9 @@
         android:theme="@style/AppTheme.TransparentStatusBar"
         tools:targetApi="31">
         <activity
+            android:name=".ExpensePage"
+            android:exported="false" />
+        <activity
             android:name=".AnotherCustomDialog"
             android:exported="false" />
         <activity

@@ -13,8 +13,8 @@
 
         <TextView
             android:id="@+id/result_tv"
-            android:layout_width="371dp"
-            android:layout_height="61dp"
+            android:layout_width="333dp"
+            android:layout_height="57dp"
             android:text="0"
             android:textAlignment="textEnd"
             android:textColor="@color/black"
@@ -24,21 +24,21 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/solution_tv"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.16" />
+            app:layout_constraintVertical_bias="0.172" />
 
         <TextView
             android:id="@+id/solution_tv"
-            android:layout_width="372dp"
-            android:layout_height="68dp"
+            android:layout_width="331dp"
+            android:layout_height="54dp"
             android:textAlignment="textEnd"
             android:textColor="@color/black"
             android:textSize="32dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.41"
+            app:layout_constraintHorizontal_bias="0.412"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.059" />
+            app:layout_constraintVertical_bias="0.08" />
 
         <LinearLayout
             android:id="@+id/buttons_layout"

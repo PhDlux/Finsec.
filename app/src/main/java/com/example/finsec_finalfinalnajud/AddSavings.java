@@ -1,6 +1,8 @@
 package com.example.finsec_finalfinalnajud;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
@@ -17,7 +19,6 @@ public class AddSavings extends AppCompatActivity implements AnotherCustomDialog
     TextView goalName;
     TextView savingsAdded;
     TextView percent;
-    DatabaseReference dbFinsec = FirebaseDatabase.getInstance().getReferenceFromUrl("https://finsec-14c51-default-rtdb.firebaseio.com/");
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,4 +40,5 @@ public class AddSavings extends AppCompatActivity implements AnotherCustomDialog
         goalName.setText(name);
         savingsAdded.setText("₱ " + n.format(savings));
     }
+
 }

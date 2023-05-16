@@ -1,16 +1,20 @@
 package com.example.finsec_finalfinalnajud;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -18,14 +22,20 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.NumberFormat;
+import org.w3c.dom.Text;
 
-public class GoalSavings extends AppCompatActivity implements View.OnClickListener, CustomDialog.CustomDialogListener, AnotherCustomDialog.AnotherCustomDialogListener {
+import java.text.NumberFormat;
+import java.text.ParseException;
+
+public class GoalSavings extends AppCompatActivity implements View.OnClickListener {
     TextView txtGoal;
     DatabaseReference dbFinsec = FirebaseDatabase.getInstance().getReferenceFromUrl("https://finsec-14c51-default-rtdb.firebaseio.com/");
     String email3;
     LinearLayout layoutlist;
     Button btnAddSavings;
+    AlertDialog addSavingsDialog;
+    AlertDialog newGoalDialog;
+    String goal;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,28 +44,25 @@ public class GoalSavings extends AppCompatActivity implements View.OnClickListen
         Button back = (Button) findViewById(R.id.btnGoalSavingsBack);
         layoutlist = (LinearLayout) findViewById(R.id.layout_list);
         btnAddSavings = (Button) findViewById(R.id.btnAddSavings);
-
-        btnAddSavings.setOnClickListener(this);
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
-
         Intent i = getIntent();
         email3 = i.getStringExtra("email2");
 
         txtGoal = (TextView) findViewById(R.id.txtGoal);
         Button newGoal = (Button) findViewById(R.id.btnNewGoal);
 
-        dbFinsec.child("users").child(email3).child("goalsavings").addListenerForSingleValueEvent(new ValueEventListener() {
+        btnAddSavings.setOnClickListener(this);
+        back.setOnClickListener(this);
+        newGoal.setOnClickListener(this);
+
+        buildNewGoalDialog();
+        buildAddSavingsDialog();
+        dbFinsec.child("users").child(email3).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                 if(snapshot.hasChild("goal")) {
                     double getSavings = snapshot.child("goal").getValue(Double.class);
-                    applyChanges(getSavings);
+                    setTxtGoal(getSavings);
                 }
 
             }
@@ -66,12 +73,7 @@ public class GoalSavings extends AppCompatActivity implements View.OnClickListen
             }
         });
 
-        newGoal.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openDialog();
-            }
-        });
+
 
         int backgroundColor = Color.parseColor("#F1F1F1");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -87,37 +89,114 @@ public class GoalSavings extends AppCompatActivity implements View.OnClickListen
         }
     }
 
-    @Override
-    public void onClick(View view) {
-        AnotherCustomDialog a = AnotherCustomDialog.newInstance(email3);
-        a.show(getSupportFragmentManager(), "Add Savings");
+    private void buildAddSavingsDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        View view = getLayoutInflater().inflate(R.layout.another_customdialog, null);
+
+        EditText etGoal = view.findViewById(R.id.etGoalName);
+        EditText etSavingsAdded = view.findViewById(R.id.etSavingsAdded);
+
+        builder.setView(view);
+        builder.setTitle("Add Goal Savings")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        double savings = Double.parseDouble(etSavingsAdded.getText().toString());
+                        try {
+
+                            double goals = Double.parseDouble(goal);
+                            int percent;
+                            System.out.println(goals);
+                            if(goals >= savings) {
+                                percent = (int) ((savings/goals) * 100);
+                            } else {
+                                throw new IllegalArgumentException();
+                            }
+
+                            addView(etGoal.getText().toString(), Double.parseDouble(etSavingsAdded.getText().toString()), percent);
+                        } catch (IllegalArgumentException il) {
+                            Toast.makeText(GoalSavings.this, "Savings cannot be greater than goal",Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
+        addSavingsDialog = builder.create();
     }
 
-    private void addView() {
-        View addsavingsview = getLayoutInflater().inflate(R.layout.add_savings, null, false);
-        layoutlist.addView(addsavingsview, 0);
+    private void buildNewGoalDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        View view = getLayoutInflater().inflate(R.layout.custom_dialog, null);
+
+        EditText etGoalSavings = view.findViewById(R.id.etGoalSavings);
+
+        builder.setView(view);
+        builder.setTitle("New Goal")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        setTxtGoal(Double.parseDouble(etGoalSavings.getText().toString()));
+
+                        goal = etGoalSavings.getText().toString();
+                        dbFinsec.child("users").child(email3).child("goal").setValue(Double.parseDouble(etGoalSavings.getText().toString()));
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
+        newGoalDialog = builder.create();
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch(view.getId()) {
+            case R.id.btnAddSavings:
+                addSavingsDialog.show();
+                break;
+            case R.id.btnNewGoal:
+                newGoalDialog.show();
+                break;
+            case R.id.back:
+                finish();
+                break;
+        }
+    }
+
+    public void addView(String goalname, double savings, int percent) {
+        View view = getLayoutInflater().inflate(R.layout.add_savings, null);
+
+        TextView txtSavingsAdded = view.findViewById(R.id.txtSavingsAdded);
+        TextView txtGoalName = view.findViewById(R.id.txtGoalName);
+        TextView txtPercent = view.findViewById(R.id.txtPercent);
+
+        NumberFormat n = NumberFormat.getInstance();
+        n.setMaximumFractionDigits(2);
+        n.setMinimumFractionDigits(2);
+
+        txtGoalName.setText(goalname);
+        txtSavingsAdded.setText("₱ " + n.format(savings));
+
+        txtPercent.setText("+" + percent + "%");
+
+        layoutlist.addView(view, 0);
+    }
+
+    public void setTxtGoal(double goal) {
+        NumberFormat n = NumberFormat.getInstance();
+        n.setMaximumFractionDigits(2);
+        n.setMinimumFractionDigits(2);
+        txtGoal.setText("₱ " + n.format(goal));
     }
 
     public static boolean isColorDark(int color) {
         double darkness = 1 - (0.299 * Color.red(color) + 0.587 * Color.green(color) + 0.114 * Color.blue(color)) / 255;
         return darkness >= 0.5;
-    }
-
-    public void openDialog() {
-        CustomDialog c = CustomDialog.newInstance(email3);
-        c.show(getSupportFragmentManager(), "Custom Dialog");
-    }
-
-    @Override
-    public void applyChanges(double savings) {
-        NumberFormat n = NumberFormat.getInstance();
-        n.setMaximumFractionDigits(2);
-        n.setMinimumFractionDigits(2);
-        txtGoal.setText(n.format(savings));
-    }
-
-    @Override
-    public void applyChanges(String name, double savings) {
-        addView();
     }
 }

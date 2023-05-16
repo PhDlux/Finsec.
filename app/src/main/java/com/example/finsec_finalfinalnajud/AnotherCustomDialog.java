@@ -22,11 +22,21 @@ public class AnotherCustomDialog extends AppCompatDialogFragment {
     DatabaseReference dbFinsec = FirebaseDatabase.getInstance().getReferenceFromUrl("https://finsec-14c51-default-rtdb.firebaseio.com/");
     AnotherCustomDialogListener listener;
 
-    public static AnotherCustomDialog newInstance(String message) {
+    private GoalSavings goalSavings;
+
+    public AnotherCustomDialog(GoalSavings goalSavings) {
+        this.goalSavings = goalSavings;
+    }
+
+    public AnotherCustomDialog() {
+    }
+
+    public static AnotherCustomDialog newInstance(String message, double goal) {
         AnotherCustomDialog fragment = new AnotherCustomDialog();
 
         Bundle args = new Bundle();
         args.putString("email4", message);
+        args.putDouble("goal", goal);
         fragment.setArguments(args);
 
         return fragment;
@@ -40,9 +50,12 @@ public class AnotherCustomDialog extends AppCompatDialogFragment {
 
         View v = inflater.inflate(R.layout.another_customdialog, null);
 
+        etSavingsAdded = v.findViewById(R.id.etSavingsAdded);
+        etGoalName = v.findViewById(R.id.etGoalName);
 
         if(getArguments() != null) {
             String email6 = getArguments().getString("email4");
+            double goal = getArguments().getDouble("goal");
             builder.setView(v)
                     .setTitle("Add Savings")
                     .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -56,14 +69,12 @@ public class AnotherCustomDialog extends AppCompatDialogFragment {
                         public void onClick(DialogInterface dialogInterface, int i) {
                             String name = etGoalName.getText().toString();
                             double savings = Double.parseDouble(etSavingsAdded.getText().toString());
-                            dbFinsec.child("users").child(email6).child("goalsavings").child("goal").child("goalname").setValue(name);
-                            dbFinsec.child("users").child(email6).child("goalsavings").child("goal").child("savings").setValue(savings);
+                            dbFinsec.child("users").child(email6).child("goalsavings").child(String.valueOf(goal).replace(".", "_")).child("goalname").setValue(name);
+                            dbFinsec.child("users").child(email6).child("goalsavings").child(String.valueOf(goal).replace(".", "_")).child("savings").setValue(savings);
                             listener.applyChanges(name, savings);
                         }
                     });
         }
-        etSavingsAdded = v.findViewById(R.id.etSavingsAdded);
-        etGoalName = v.findViewById(R.id.etGoalName);
         return builder.create();
     }
 

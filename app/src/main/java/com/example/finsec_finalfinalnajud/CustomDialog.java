@@ -40,6 +40,7 @@ public class CustomDialog extends AppCompatDialogFragment {
         View v = inflater.inflate(R.layout.custom_dialog, null);
 
 
+
         if(getArguments() != null) {
             String email5 = getArguments().getString("email4");
             builder.setView(v)
@@ -79,4 +80,5 @@ public class CustomDialog extends AppCompatDialogFragment {
     public interface CustomDialogListener {
         void applyChanges(double savings);
     }
+
 }

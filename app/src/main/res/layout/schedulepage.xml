@@ -57,7 +57,7 @@
             android:id="@+id/imgbtnbudget"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
+            android:layout_marginStart="30dp"
             android:layout_marginTop="28dp"
             android:layout_marginEnd="17dp"
             android:layout_marginBottom="45dp"
@@ -67,7 +67,8 @@
             app:layout_constraintEnd_toStartOf="@+id/imgbtnexpenses2"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/calendarView" />
+            app:layout_constraintTop_toBottomOf="@+id/calendarView"
+            app:layout_constraintVertical_bias="1.0" />
 
         <TextView
             android:id="@+id/txtbudget"
@@ -116,21 +117,21 @@
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/calendarView"
-            app:layout_constraintVertical_bias="0.048" />
+            app:layout_constraintVertical_bias="0.037" />
 
         <ImageButton
             android:id="@+id/imgbtnexpenses2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="28dp"
+            android:layout_marginEnd="30dp"
             android:background="#00FFFFFF"
             android:src="@drawable/whiteframe"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.894"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imgbtnbudget"
             app:layout_constraintTop_toBottomOf="@+id/calendarView"
-            app:layout_constraintVertical_bias="0.004" />
+            app:layout_constraintVertical_bias="0.007" />
 
         <TextView
             android:id="@+id/txtexpenses1"
@@ -143,10 +144,10 @@
             android:textColor="#D62279"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_bias="0.846"
             app:layout_constraintStart_toStartOf="@+id/txtexpensesnum1"
             app:layout_constraintTop_toBottomOf="@+id/calendarView"
-            app:layout_constraintVertical_bias="0.017" />
+            app:layout_constraintVertical_bias="0.016" />
 
         <TextView
             android:id="@+id/txtexpensesnum1"
@@ -160,7 +161,7 @@
             android:textSize="17sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintHorizontal_bias="0.819"
             app:layout_constraintStart_toStartOf="@+id/imgbtnexpenses2"
             app:layout_constraintTop_toBottomOf="@+id/calendarView"
             app:layout_constraintVertical_bias="0.015" />

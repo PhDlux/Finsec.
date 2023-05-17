@@ -17,6 +17,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Date;
+import java.util.Locale;
+
 /*
  * A simple {@link Fragment} subclass.
  * Use the {@link HomepageFragment#newInstance} factory method to
@@ -43,6 +48,14 @@ public class HomepageFragment extends Fragment {
 
         ImageButton btnFrame = view.findViewById(R.id.imgbtntotalsavings);
         TextView txtTotalSavingsNum = view.findViewById(R.id.txttotalsavingsnum); // Assuming this is the TextView you want to update.
+        TextView dateTextView = view.findViewById(R.id.txtdate); // Replace with your TextView's ID
+        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy", Locale.getDefault());
+        String currentDate = sdf.format(new Date());
+
+        String originalText = dateTextView.getText().toString();
+        String newText = originalText.substring(0, 6) + currentDate.toString();
+
+        dateTextView.setText(newText);
 
         ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -64,6 +77,7 @@ public class HomepageFragment extends Fragment {
                 if(getArguments() != null){
                     Intent i = new Intent(getActivity(), GoalSavings.class);
                     i.putExtra("email2", getArguments().getString("email1"));
+                    i.putExtra("currentDate", dateTextView.getText().toString().substring(6));
                     mStartForResult.launch(i);
                 }
             }

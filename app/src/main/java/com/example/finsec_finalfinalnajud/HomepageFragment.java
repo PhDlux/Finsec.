@@ -105,6 +105,18 @@ public class HomepageFragment extends Fragment {
                 }
             }
         });
+
+        btnFrame1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(getArguments() != null){
+                    Intent i = new Intent(getActivity(), ExpensePage.class);
+                    i.putExtra("email2", getArguments().getString("encodedEmail"));
+                    i.putExtra("currentDate", dateTextView.getText().toString().substring(6));
+                    startActivity(i);
+                }
+            }
+        });
     }
 
     public static HomepageFragment newInstance(String email) {
@@ -165,15 +177,7 @@ public class HomepageFragment extends Fragment {
                 // Handle error...
             }
         });
-        btnFrame1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(getArguments() != null){
-                    Intent i = new Intent(getActivity(), ExpensePage.class);
-                    mStartForResult.launch(i);
-                }
-            }
-        });
+
     }
 
     private void setGreeting(TextView txtHelloUser) {

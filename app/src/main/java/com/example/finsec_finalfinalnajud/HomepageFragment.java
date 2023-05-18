@@ -147,7 +147,7 @@ public class HomepageFragment extends Fragment {
                             || date.equals("gender") || date.equals("goal") || date.equals("lastname")
                             || date.equals("password")) continue;
 
-                    for (DataSnapshot goalSnapshot : dateSnapshot.getChildren()) {
+                    for (DataSnapshot goalSnapshot : dateSnapshot.child("Goal").getChildren()) {
                         if (goalSnapshot.child("savings").getValue() != null) {
                             String savingsStr = goalSnapshot.child("savings").getValue(String.class);
 
@@ -164,6 +164,8 @@ public class HomepageFragment extends Fragment {
                             Log.e(TAG, "Null value for savings for date " + date);
                         }
                     }
+
+
                 }
 
                 NumberFormat n = NumberFormat.getInstance();
@@ -241,7 +243,7 @@ public class HomepageFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 double totalSavings = 0;
-                for (DataSnapshot goalSnapshot : snapshot.getChildren()) {
+                for (DataSnapshot goalSnapshot : snapshot.child("Goal").getChildren()) {
                     if (goalSnapshot.child("savings").getValue() != null) {
                         String savingsStr = goalSnapshot.child("savings").getValue(String.class);
 

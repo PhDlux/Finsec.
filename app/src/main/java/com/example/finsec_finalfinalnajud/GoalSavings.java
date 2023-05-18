@@ -117,10 +117,10 @@ public class GoalSavings extends AppCompatActivity implements View.OnClickListen
                             num = x.toString();
                             goals = Double.parseDouble(num);
                             int percent;
+                            if(goals == 0) {
+                                throw new IllegalArgumentException("Set the your goal-savings first!");
+                            }
                             if(goals >= savings) {
-                                if(goals == 0) {
-                                    throw new IllegalArgumentException("Set the your goal-savings first!");
-                                }
                                 percent = (int) ((savings/goals) * 100);
                             } else {
                                 throw new IllegalArgumentException("Goal max cap exceeded!");
@@ -130,7 +130,7 @@ public class GoalSavings extends AppCompatActivity implements View.OnClickListen
                                 throw new IllegalArgumentException("You have reached your goal. Set another one!");
                             }
 
-                            DatabaseReference dateRef = dbFinsec.child("users").child(email3).child(date);
+                            DatabaseReference dateRef = dbFinsec.child("users").child(email3).child(date).child("Goal");
 
                             dateRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
@@ -252,9 +252,9 @@ public class GoalSavings extends AppCompatActivity implements View.OnClickListen
                             || date.equals("gender") || date.equals("goal") || date.equals("lastname")
                             || date.equals("password")) continue;
 
-                    if (dateSnapshot.hasChild(goalname)) {
-                        String dbSavings = dateSnapshot.child(goalname).child("savings").getValue(String.class);
-                        String dbPercent = dateSnapshot.child(goalname).child("percent").getValue(String.class);
+                    if (dateSnapshot.child("Goal").hasChild(goalname)) {
+                        String dbSavings = dateSnapshot.child("Goal").child(goalname).child("savings").getValue(String.class);
+                        String dbPercent = dateSnapshot.child("Goal").child(goalname).child("percent").getValue(String.class);
 
                         double dbSavingsValue = Double.parseDouble(dbSavings);
                         int dbPercentValue = Integer.parseInt(dbPercent);
@@ -335,7 +335,7 @@ public class GoalSavings extends AppCompatActivity implements View.OnClickListen
                             || date.equals("gender") || date.equals("goal") || date.equals("lastname")
                             || date.equals("password")) continue;
 
-                    for (DataSnapshot goalSnapshot : dateSnapshot.getChildren()) {
+                    for (DataSnapshot goalSnapshot : dateSnapshot.child("Goal").getChildren()) {
                         String goalName = goalSnapshot.getKey();
 
                         // Check for null values
@@ -435,7 +435,7 @@ public class GoalSavings extends AppCompatActivity implements View.OnClickListen
         n.setMaximumFractionDigits(2);
         n.setMinimumFractionDigits(2);
 
-        DatabaseReference dbSavingsRef = dbFinsec.child("users").child(email3).child(date).child(name);
+        DatabaseReference dbSavingsRef = dbFinsec.child("users").child(email3).child(date).child("Goal").child(name);
         dbSavingsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

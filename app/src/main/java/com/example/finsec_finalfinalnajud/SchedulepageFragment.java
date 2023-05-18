@@ -77,7 +77,7 @@ public class SchedulepageFragment extends Fragment {
     }
 
     private void buildAllocateBudgetDialog() {
-        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         View view = getLayoutInflater().inflate(R.layout.allocate_budget, null);
 
         EditText etBudgetName = view.findViewById(R.id.etAllocateBudget);
@@ -120,4 +120,5 @@ public class SchedulepageFragment extends Fragment {
 
 
     }
+
 }

@@ -1,5 +1,7 @@
 package com.example.finsec_finalfinalnajud;
 
+import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,10 +12,12 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,7 +31,11 @@ import org.w3c.dom.Text;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class GoalSavings extends AppCompatActivity implements View.OnClickListener {
     TextView txtGoal;
@@ -39,7 +47,9 @@ public class GoalSavings extends AppCompatActivity implements View.OnClickListen
     Button btnAddSavings;
     AlertDialog addSavingsDialog;
     AlertDialog newGoalDialog;
-    String goal;
+    String goal, date;
+    ProgressBar progressBar;
+    HashMap<String, Integer> indexMap = new HashMap<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,11 +60,13 @@ public class GoalSavings extends AppCompatActivity implements View.OnClickListen
         btnAddSavings = (Button) findViewById(R.id.btnAddSavings);
         Intent i = getIntent();
         email3 = i.getStringExtra("email2");
+        date = i.getStringExtra("currentDate");
 
         txtGoal = (TextView) findViewById(R.id.txtGoal);
         txtTotalCurrentSavings = (TextView ) findViewById(R.id.txtTotalCurrentSavings);
         txtCurrentSavings = findViewById(R.id.txtCurrentSavings);
         Button newGoal = (Button) findViewById(R.id.btnNewGoal);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         btnAddSavings.setOnClickListener(this);
         back.setOnClickListener(this);
@@ -62,31 +74,7 @@ public class GoalSavings extends AppCompatActivity implements View.OnClickListen
 
         buildNewGoalDialog();
         buildAddSavingsDialog();
-//        dbFinsec.child("users").child(email3).addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//
-//                if(snapshot.hasChild("goal")) {
-//                    double getSavings = snapshot.child("goal").getValue(Double.class);
-//                    setTxtGoal(getSavings);
-//                    String num = txtGoal.getText().toString().substring(1);
-//                    try {
-//                        goal = NumberFormat.getInstance(Locale.US).parse(num).toString();
-//                        System.out.println(goal);
-//                    } catch (ParseException e) {
-//                        throw new RuntimeException(e);
-//                    }
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
-
-
+        loadData();
 
         int backgroundColor = Color.parseColor("#F1F1F1");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -108,7 +96,6 @@ public class GoalSavings extends AppCompatActivity implements View.OnClickListen
 
         EditText etGoal = view.findViewById(R.id.etGoalName);
         EditText etSavingsAdded = view.findViewById(R.id.etSavingsAdded);
-
         builder.setView(view);
         builder.setTitle("Add Goal Savings")
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -116,24 +103,71 @@ public class GoalSavings extends AppCompatActivity implements View.OnClickListen
                     public void onClick(DialogInterface dialogInterface, int i) {
                         double savings = Double.parseDouble(etSavingsAdded.getText().toString());
                         try {
-                            NumberFormat n = NumberFormat.getInstance();
+                            NumberFormat n = NumberFormat.getInstance(Locale.US);
 
-                            double temp = n.parse(txtCurrentSavings.getText().toString().substring(1)).doubleValue();
-                            double goals = Double.parseDouble(goal);
-                            int percent;
-                            System.out.println(goals);
-                            if(goals >= savings) {
-                                percent = (int) ((savings/goals) * 100);
-                            } else {
-                                throw new IllegalArgumentException();
+                            double temp = n.parse(txtCurrentSavings.getText().toString().substring(1).replace(",", "")).doubleValue();
+                            String num;
+                            double goals;
+
+                            if(goal==null) {
+                                goal = txtGoal.getText().toString().substring(2);
                             }
 
-                            setTxtCurrentSavings(temp + savings);
+                            Number x = n.parse(goal);
+                            num = x.toString();
+                            goals = Double.parseDouble(num);
+                            int percent;
+                            if(goals >= savings) {
+                                if(goals == 0) {
+                                    throw new IllegalArgumentException("Set the your goal-savings first!");
+                                }
+                                percent = (int) ((savings/goals) * 100);
+                            } else {
+                                throw new IllegalArgumentException("Goal max cap exceeded!");
+                            }
+
+                            if((temp + savings) > goals) {
+                                throw new IllegalArgumentException("You have reached your goal. Set another one!");
+                            }
+
+                            DatabaseReference dateRef = dbFinsec.child("users").child(email3).child(date);
+
+                            dateRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    String savings = etSavingsAdded.getText().toString();
+                                    String dbPercent = String.valueOf(percent);
+                                    if(!snapshot.hasChild(etGoal.getText().toString())) {
+                                        dateRef.child(etGoal.getText().toString());
+                                    } else {
+                                        String dbSavingsVal = snapshot.child(etGoal.getText().toString()).child("savings").getValue(String.class);
+                                        String percentVal = snapshot.child(etGoal.getText().toString()).child("percent").getValue(String.class);
+                                        int fs = Integer.parseInt(dbSavingsVal) + Integer.parseInt(savings);
+                                        if(fs > goals) {
+                                            throw new IllegalArgumentException("You have reached your goal. Set another one!");
+                                        }
+                                        int finalSavings = fs;
+                                        savings = String.valueOf(finalSavings);
+                                        int finalPercent = percent + Integer.parseInt(percentVal);
+                                        dbPercent = String.valueOf(finalPercent);
+                                    }
+                                    dateRef.child(etGoal.getText().toString()).child("savings").setValue(savings);
+                                    dateRef.child(etGoal.getText().toString()).child("percent").setValue(dbPercent);
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+
+                            setTxtCurrentSavings(etGoal.getText().toString(),temp + savings);
                             addView(etGoal.getText().toString(), Double.parseDouble(etSavingsAdded.getText().toString()), percent);
-                        } catch (IllegalArgumentException il) {
-                            Toast.makeText(GoalSavings.this, "Savings cannot be greater than goal",Toast.LENGTH_SHORT).show();
-                        } catch (ParseException e) {
+
+                        }  catch (ParseException e) {
                             throw new RuntimeException(e);
+                        } catch(IllegalArgumentException il) {
+                            Toast.makeText(GoalSavings.this, il.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 })
@@ -157,10 +191,18 @@ public class GoalSavings extends AppCompatActivity implements View.OnClickListen
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        setTxtGoal(Double.parseDouble(etGoalSavings.getText().toString()));
 
-                        goal = etGoalSavings.getText().toString();
-//                        dbFinsec.child("users").child(email3).child("goal").setValue(Double.parseDouble(etGoalSavings.getText().toString()));
+                        NumberFormat n = NumberFormat.getInstance();
+                        n.setMaximumFractionDigits(2);
+                        n.setMinimumFractionDigits(2);
+
+                        double goalValue = Double.parseDouble(etGoalSavings.getText().toString());
+
+
+                        goal = String.valueOf((int)goalValue);
+                        dbFinsec.child("users").child(email3).child("goal").setValue(goal);
+
+                        setTxtGoal();
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -185,12 +227,56 @@ public class GoalSavings extends AppCompatActivity implements View.OnClickListen
                 Intent returnIntent = new Intent();
                 returnIntent.putExtra("totalCurrentSavings", txtTotalCurrentSavings.getText().toString());
                 setResult(Activity.RESULT_OK, returnIntent);
+                removeAllViewsExceptLast();
                 finish();
                 break;
         }
     }
 
+    // Create a List to store the goal name order
+    List<String> goalNameOrder = new ArrayList<>();
+
     public void addView(String goalname, double savings, int percent) {
+        DatabaseReference userRef = dbFinsec.child("users").child(email3);
+
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                GoalData goalData = new GoalData(savings, percent);
+
+                for (DataSnapshot dateSnapshot : snapshot.getChildren()) {
+                    String date = dateSnapshot.getKey();
+
+                    // Skip if it is otherfields
+                    if (date.equals("contactNumber") || date.equals("dateofbirth") || date.equals("firstname")
+                            || date.equals("gender") || date.equals("goal") || date.equals("lastname")
+                            || date.equals("password")) continue;
+
+                    if (dateSnapshot.hasChild(goalname)) {
+                        String dbSavings = dateSnapshot.child(goalname).child("savings").getValue(String.class);
+                        String dbPercent = dateSnapshot.child(goalname).child("percent").getValue(String.class);
+
+                        double dbSavingsValue = Double.parseDouble(dbSavings);
+                        int dbPercentValue = Integer.parseInt(dbPercent);
+
+                        goalData.savings += dbSavingsValue;
+                        goalData.percent += dbPercentValue;
+                    }
+                }
+
+                // Update the view with consolidated data
+                updateView(goalname, goalData.savings, goalData.percent);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+
+    public void updateView(String goalname, double savings, int percent) {
         View view = getLayoutInflater().inflate(R.layout.add_savings, null);
 
         TextView txtSavingsAdded = view.findViewById(R.id.txtSavingsAdded);
@@ -203,25 +289,169 @@ public class GoalSavings extends AppCompatActivity implements View.OnClickListen
 
         txtGoalName.setText(goalname);
         txtSavingsAdded.setText("₱ " + n.format(savings));
-
         txtPercent.setText("+" + percent + "%");
 
+        // if goal already exists, remove the old view
+        if (goalNameOrder.contains(goalname)) {
+            int index = goalNameOrder.indexOf(goalname);
+            layoutlist.removeViewAt(index);
+            goalNameOrder.remove(index);
+        }
+
+        // Add the new view at index 0 and update goalNameOrder
         layoutlist.addView(view, 0);
+        goalNameOrder.add(0, goalname);
     }
 
-    public void setTxtGoal(double goal) {
+    private void removeAllViewsExceptLast() {
+        int childCount = layoutlist.getChildCount();
+
+        // leave the last child (Button)
+        if (childCount > 1) {
+            layoutlist.removeViews(0, childCount - 1);
+        }
+    }
+
+    public void loadData() {
+
+        setTxtGoal();
+        DatabaseReference userRef = dbFinsec.child("users").child(email3);
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                removeAllViewsExceptLast();
+
+                // A map to store the consolidated data
+                Map<String, GoalData> consolidatedData = new HashMap<>();
+
+                // Variables to store the total savings
+                double totalSavings = 0;
+
+                for (DataSnapshot dateSnapshot : snapshot.getChildren()) {
+                    String date = dateSnapshot.getKey();
+
+                    // Skip if it is otherfields
+                    if (date.equals("contactNumber") || date.equals("dateofbirth") || date.equals("firstname")
+                            || date.equals("gender") || date.equals("goal") || date.equals("lastname")
+                            || date.equals("password")) continue;
+
+                    for (DataSnapshot goalSnapshot : dateSnapshot.getChildren()) {
+                        String goalName = goalSnapshot.getKey();
+
+                        // Check for null values
+                        if (goalSnapshot.child("savings").getValue() != null && goalSnapshot.child("percent").getValue() != null) {
+                            String savingsStr = goalSnapshot.child("savings").getValue(String.class);
+                            String percentStr = goalSnapshot.child("percent").getValue(String.class);
+
+                            double savings = 0;
+                            int percent = 0;
+
+                            try {
+                                savings = Double.parseDouble(savingsStr);
+                                percent = Integer.parseInt(percentStr);
+                            } catch (NumberFormatException e) {
+                                Log.e(TAG, "Failed to parse savings or percent for goal " + goalName);
+                            }
+
+                            // Consolidate data
+                            if (consolidatedData.containsKey(goalName)) {
+                                GoalData existingGoalData = consolidatedData.get(goalName);
+                                existingGoalData.savings += savings;
+                                existingGoalData.percent += percent;
+                            } else {
+                                consolidatedData.put(goalName, new GoalData(savings, percent));
+                            }
+
+                            totalSavings += savings;
+                        } else {
+                            Log.e(TAG, "Null value for savings or percent for goal " + goalName);
+                        }
+                    }
+                }
+
+                // Update views with consolidated data
+                for (Map.Entry<String, GoalData> entry : consolidatedData.entrySet()) {
+                    updateView(entry.getKey(), entry.getValue().savings, entry.getValue().percent);
+                }
+
+                NumberFormat n = NumberFormat.getInstance();
+                n.setMaximumFractionDigits(2);
+                n.setMinimumFractionDigits(2);
+
+                txtCurrentSavings.setText("₱ " + n.format(totalSavings));
+                txtTotalCurrentSavings.setText("₱ " + n.format(totalSavings));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public static class GoalData {
+        public double savings;
+        public int percent;
+
+        public GoalData(double savings, int percent) {
+            this.savings = savings;
+            this.percent = percent;
+        }
+    }
+
+
+
+    public void setTxtGoal() {
         NumberFormat n = NumberFormat.getInstance();
         n.setMaximumFractionDigits(2);
         n.setMinimumFractionDigits(2);
-        txtGoal.setText("₱ " + n.format(goal));
+        dbFinsec.child("users").child(email3).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.hasChild("goal")) {
+                    goal = snapshot.child("goal").getValue(String.class);
+                    double numValue = Double.parseDouble(goal);
+                    txtGoal.setText("₱ " + n.format(numValue));
+                    progressBar.setMax((int) numValue);
+
+                } else {
+                    System.out.println("LOL its zero");
+                    txtGoal.setText("₱ 0.00");
+                    progressBar.setMax(0);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
     }
 
-    public void setTxtCurrentSavings(double savings) {
+    public void setTxtCurrentSavings(String name, double savings) {
         NumberFormat n = NumberFormat.getInstance();
         n.setMaximumFractionDigits(2);
         n.setMinimumFractionDigits(2);
-        txtCurrentSavings.setText("₱ " + n.format(savings));
-        txtTotalCurrentSavings.setText("₱ " + n.format(savings));
+
+        DatabaseReference dbSavingsRef = dbFinsec.child("users").child(email3).child(date).child(name);
+        dbSavingsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+//                if(snapshot.hasChild())
+                txtCurrentSavings.setText("₱ " + n.format(savings));
+                txtTotalCurrentSavings.setText("₱ " + n.format(savings));
+
+                progressBar.setProgress((int) savings);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
     }
     public static boolean isColorDark(int color) {
         double darkness = 1 - (0.299 * Color.red(color) + 0.587 * Color.green(color) + 0.114 * Color.blue(color)) / 255;

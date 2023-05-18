@@ -227,7 +227,7 @@ public class GoalSavings extends AppCompatActivity implements View.OnClickListen
                 Intent returnIntent = new Intent();
                 returnIntent.putExtra("totalCurrentSavings", txtTotalCurrentSavings.getText().toString());
                 setResult(Activity.RESULT_OK, returnIntent);
-                removeAllViewsExceptLast();
+
                 finish();
                 break;
         }
@@ -363,6 +363,7 @@ public class GoalSavings extends AppCompatActivity implements View.OnClickListen
                             }
 
                             totalSavings += savings;
+                            progressBar.setProgress((int) totalSavings);
                         } else {
                             Log.e(TAG, "Null value for savings or percent for goal " + goalName);
                         }

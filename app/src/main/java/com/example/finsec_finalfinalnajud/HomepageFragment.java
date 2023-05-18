@@ -76,6 +76,7 @@ public class HomepageFragment extends Fragment {
         }
 
         ImageButton btnFrame = view.findViewById(R.id.imgbtntotalsavings);
+        ImageButton btnFrame1 = view.findViewById(R.id.imgbtnexpenses);
         TextView txtTotalSavingsNum = view.findViewById(R.id.txttotalsavingsnum); // Assuming this is the TextView you want to update.
         TextView dateTextView = view.findViewById(R.id.txtdate); // Replace with your TextView's ID
         TextView txtHelloUser = view.findViewById(R.id.txthello);
@@ -98,6 +99,18 @@ public class HomepageFragment extends Fragment {
             public void onClick(View view) {
                 if(getArguments() != null){
                     Intent i = new Intent(getActivity(), GoalSavings.class);
+                    i.putExtra("email2", getArguments().getString("encodedEmail"));
+                    i.putExtra("currentDate", dateTextView.getText().toString().substring(6));
+                    startActivity(i);
+                }
+            }
+        });
+
+        btnFrame1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(getArguments() != null){
+                    Intent i = new Intent(getActivity(), ExpensePage.class);
                     i.putExtra("email2", getArguments().getString("encodedEmail"));
                     i.putExtra("currentDate", dateTextView.getText().toString().substring(6));
                     startActivity(i);
@@ -164,6 +177,7 @@ public class HomepageFragment extends Fragment {
                 // Handle error...
             }
         });
+
     }
 
     private void setGreeting(TextView txtHelloUser) {

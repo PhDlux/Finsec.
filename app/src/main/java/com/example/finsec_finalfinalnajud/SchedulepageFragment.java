@@ -1,11 +1,19 @@
 package com.example.finsec_finalfinalnajud;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+
+import java.text.NumberFormat;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -58,5 +66,58 @@ public class SchedulepageFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.schedulepage, container, false);
+    }
+
+    AlertDialog addNewBudget;
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+
+    }
+
+    private void buildAllocateBudgetDialog() {
+        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(this);
+        View view = getLayoutInflater().inflate(R.layout.allocate_budget, null);
+
+        EditText etBudgetName = view.findViewById(R.id.etAllocateBudget);
+        EditText etBudget = view.findViewById(R.id.etBudget);
+
+        builder.setView(view);
+        builder.setTitle("Allocate Budget")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        NumberFormat n = NumberFormat.getInstance();
+                        n.setMaximumFractionDigits(2);
+                        n.setMinimumFractionDigits(2);
+
+                        String budgetName = etBudgetName.getText().toString();
+                        double budgetValue = Double.parseDouble(etBudget.getText().toString());
+
+
+//                        goal = String.valueOf((int)goalValue);
+//                        dbFinsec.child("users").child(email3).child("goal").setValue(goal);
+//
+//                        setTxtGoal();
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
+        addNewBudget = builder.create();
+    }
+
+    private void addView() {
+        View view = getLayoutInflater().inflate(R.layout.budget_frame, null);
+
+        TextView budgetName = view.findViewById(R.id.txtBudgetName);
+        TextView budget = view.findViewById(R.id.txtBudget);
+
+
     }
 }

@@ -39,7 +39,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:layout_marginEnd="70dp"
+                android:layout_marginEnd="100dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -58,7 +58,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:fontFamily="@font/nunitobold"
-                    android:text="Welcome Back!"
+                    android:text="Welcome!"
                     android:textColor="#070707"
                     android:textSize="18sp" />
             </LinearLayout>
@@ -132,6 +132,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/nunitobold"
                 android:text="Salera, Lance Vincent"
+                android:textAlignment="textStart"
                 android:textColor="#090909"
                 android:textSize="14sp" />
 
@@ -179,6 +180,7 @@
                 android:id="@+id/txtsavingsarrow"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_marginEnd="10dp"
                 android:text="⬆"
                 android:textColor="#2D9D94"
                 android:textSize="38sp" />
@@ -244,6 +246,7 @@
                 android:id="@+id/txtexpensesarrow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
                 android:rotationX="-184"
                 android:scaleX="-1"
                 android:text="⬆"

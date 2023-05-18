@@ -42,6 +42,7 @@ public class HomepageFragment extends Fragment {
 
 
         ImageButton btnFrame = view.findViewById(R.id.imgbtntotalsavings);
+        ImageButton btnFrame1 = view.findViewById(R.id.imgbtnexpenses);
         TextView txtTotalSavingsNum = view.findViewById(R.id.txttotalsavingsnum); // Assuming this is the TextView you want to update.
 
         ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(
@@ -64,6 +65,15 @@ public class HomepageFragment extends Fragment {
                 if(getArguments() != null){
                     Intent i = new Intent(getActivity(), GoalSavings.class);
                     i.putExtra("email2", getArguments().getString("email1"));
+                    mStartForResult.launch(i);
+                }
+            }
+        });
+        btnFrame1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(getArguments() != null){
+                    Intent i = new Intent(getActivity(), ExpensePage.class);
                     mStartForResult.launch(i);
                 }
             }

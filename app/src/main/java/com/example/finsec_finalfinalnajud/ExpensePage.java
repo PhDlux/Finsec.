@@ -190,6 +190,7 @@ public class ExpensePage extends AppCompatActivity implements View.OnClickListen
         }
     }
 
+
     public void addView(String goalname, double savings, int percent) {
         View view = getLayoutInflater().inflate(R.layout.add_expense, null);
 

@@ -39,7 +39,6 @@ import java.util.Locale;
 import java.util.Map;
 
 public class ExpensePage extends AppCompatActivity implements View.OnClickListener {
-
     TextView txtGoal;
     TextView txtCurrentSavings;
     TextView txtTotalCurrentSavings;
@@ -64,7 +63,9 @@ public class ExpensePage extends AppCompatActivity implements View.OnClickListen
         email3 = i.getStringExtra("email2");
         date = i.getStringExtra("currentDate");
 
+
         txtCurrentSavings = findViewById(R.id.txtCurrentSavings);
+
 
         btnAddSavings.setOnClickListener(this);
         back.setOnClickListener(this);
@@ -90,12 +91,12 @@ public class ExpensePage extends AppCompatActivity implements View.OnClickListen
 
     private void buildAddSavingsDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        View view = getLayoutInflater().inflate(R.layout.another_customdialog, null);
+        View view = getLayoutInflater().inflate(R.layout.expense_customdialog, null);
 
         EditText etGoal = view.findViewById(R.id.etGoalName);
         EditText etSavingsAdded = view.findViewById(R.id.etSavingsAdded);
         builder.setView(view);
-        builder.setTitle("Add Goal Savings")
+        builder.setTitle("Add Expenses")
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -115,10 +116,10 @@ public class ExpensePage extends AppCompatActivity implements View.OnClickListen
                             num = x.toString();
                             goals = Double.parseDouble(num);
                             int percent;
+                            if(goals == 0) {
+                                throw new IllegalArgumentException("Set the your goal-savings first!");
+                            }
                             if(goals >= expense) {
-                                if(goals == 0) {
-                                    throw new IllegalArgumentException("Set the your goal-savings first!");
-                                }
                                 percent = (int) ((expense/goals) * 100);
                             } else {
                                 throw new IllegalArgumentException("Goal max cap exceeded!");
@@ -128,7 +129,7 @@ public class ExpensePage extends AppCompatActivity implements View.OnClickListen
                                 throw new IllegalArgumentException("You have reached your goal. Set another one!");
                             }
 
-                            DatabaseReference dateRef = dbFinsec.child("users").child(email3).child(date);
+                            DatabaseReference dateRef = dbFinsec.child("users").child(email3).child(date).child("Expenses");
 
                             dateRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
@@ -146,8 +147,6 @@ public class ExpensePage extends AppCompatActivity implements View.OnClickListen
                                         }
                                         int finalSavings = fs;
                                         expense = String.valueOf(finalSavings);
-                                        int finalPercent = percent + Integer.parseInt(percentVal);
-                                        dbPercent = String.valueOf(finalPercent);
                                     }
                                     dateRef.child(etGoal.getText().toString()).child("expense").setValue(expense);
                                     dateRef.child(etGoal.getText().toString()).child("percent").setValue(dbPercent);
@@ -223,7 +222,6 @@ public class ExpensePage extends AppCompatActivity implements View.OnClickListen
                 break;
             case R.id.btnGoalSavingsBack:
                 Intent returnIntent = new Intent();
-                returnIntent.putExtra("totalCurrentSavings", txtTotalCurrentSavings.getText().toString());
                 setResult(Activity.RESULT_OK, returnIntent);
 
                 finish();
@@ -240,7 +238,7 @@ public class ExpensePage extends AppCompatActivity implements View.OnClickListen
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                ExpensePage.GoalData goalData = new ExpensePage.GoalData(expense, percent);
+                ExpensePage.ExpenseData expenseData = new ExpensePage.ExpenseData(expense, percent);
 
                 for (DataSnapshot dateSnapshot : snapshot.getChildren()) {
                     String date = dateSnapshot.getKey();
@@ -250,20 +248,18 @@ public class ExpensePage extends AppCompatActivity implements View.OnClickListen
                             || date.equals("gender") || date.equals("goal") || date.equals("lastname")
                             || date.equals("password")) continue;
 
-                    if (dateSnapshot.hasChild(goalname)) {
-                        String dbExpense = dateSnapshot.child(goalname).child("expense").getValue(String.class);
-                        String dbPercent = dateSnapshot.child(goalname).child("percent").getValue(String.class);
+                    if (dateSnapshot.child("Expenses").hasChild(goalname)) {
+                        String dbExpense = dateSnapshot.child("Expenses").child(goalname).child("expense").getValue(String.class);
+                        String dbPercent = dateSnapshot.child("Expenses").child(goalname).child("percent").getValue(String.class);
 
-                        double dbSavingsValue = Double.parseDouble(dbExpense);
-                        int dbPercentValue = Integer.parseInt(dbPercent);
+                        double dbExpenseValue = Double.parseDouble(dbExpense);
 
-                        goalData.expense += dbSavingsValue;
-                        goalData.percent += dbPercentValue;
+                        expenseData.expense += dbExpenseValue;
                     }
                 }
 
                 // Update the view with consolidated data
-                updateView(goalname, goalData.expense, goalData.percent);
+                updateView(goalname, expenseData.expense, expenseData.percent);
             }
 
             @Override
@@ -274,7 +270,7 @@ public class ExpensePage extends AppCompatActivity implements View.OnClickListen
     }
 
 
-    public void updateView(String goalname, double savings, int percent) {
+    public void updateView(String goalname, double expense, int percent) {
         View view = getLayoutInflater().inflate(R.layout.add_expense, null);
 
         TextView txtSavingsAdded = view.findViewById(R.id.txtSavingsAdded);
@@ -285,7 +281,7 @@ public class ExpensePage extends AppCompatActivity implements View.OnClickListen
         n.setMinimumFractionDigits(2);
 
         txtGoalName.setText(goalname);
-        txtSavingsAdded.setText("₱ " + n.format(savings));
+        txtSavingsAdded.setText("₱ " + n.format(expense));
 
         // if goal already exists, remove the old view
         if (goalNameOrder.contains(goalname)) {
@@ -318,7 +314,7 @@ public class ExpensePage extends AppCompatActivity implements View.OnClickListen
                 removeAllViewsExceptLast();
 
                 // A map to store the consolidated data
-                Map<String, ExpensePage.GoalData> consolidatedData = new HashMap<>();
+                Map<String, ExpensePage.ExpenseData> consolidatedData = new HashMap<>();
 
                 // Variables to store the total savings
                 double totalSavings = 0;
@@ -331,19 +327,19 @@ public class ExpensePage extends AppCompatActivity implements View.OnClickListen
                             || date.equals("gender") || date.equals("goal") || date.equals("lastname")
                             || date.equals("password")) continue;
 
-                    for (DataSnapshot goalSnapshot : dateSnapshot.getChildren()) {
+                    for (DataSnapshot goalSnapshot : dateSnapshot.child("Expenses").getChildren()) {
                         String goalName = goalSnapshot.getKey();
 
                         // Check for null values
-                        if (goalSnapshot.child("savings").getValue() != null && goalSnapshot.child("percent").getValue() != null) {
-                            String savingsStr = goalSnapshot.child("savings").getValue(String.class);
+                        if (goalSnapshot.child("expense").getValue() != null && goalSnapshot.child("percent").getValue() != null) {
+                            String savingsStr = goalSnapshot.child("expense").getValue(String.class);
                             String percentStr = goalSnapshot.child("percent").getValue(String.class);
 
-                            double savings = 0;
+                            double expense = 0;
                             int percent = 0;
 
                             try {
-                                savings = Double.parseDouble(savingsStr);
+                                expense = Double.parseDouble(savingsStr);
                                 percent = Integer.parseInt(percentStr);
                             } catch (NumberFormatException e) {
                                 Log.e(TAG, "Failed to parse savings or percent for goal " + goalName);
@@ -351,14 +347,14 @@ public class ExpensePage extends AppCompatActivity implements View.OnClickListen
 
                             // Consolidate data
                             if (consolidatedData.containsKey(goalName)) {
-                                ExpensePage.GoalData existingGoalData = consolidatedData.get(goalName);
-                                existingGoalData.expense += savings;
-                                existingGoalData.percent += percent;
+                                ExpensePage.ExpenseData existingExpenseData = consolidatedData.get(goalName);
+                                existingExpenseData .expense += expense;
+                                existingExpenseData .percent += percent;
                             } else {
-                                consolidatedData.put(goalName, new ExpensePage.GoalData(savings, percent));
+                                consolidatedData.put(goalName, new ExpensePage.ExpenseData(expense, percent));
                             }
 
-
+                            totalSavings += expense;
                         } else {
                             Log.e(TAG, "Null value for savings or percent for goal " + goalName);
                         }
@@ -366,7 +362,7 @@ public class ExpensePage extends AppCompatActivity implements View.OnClickListen
                 }
 
                 // Update views with consolidated data
-                for (Map.Entry<String, ExpensePage.GoalData> entry : consolidatedData.entrySet()) {
+                for (Map.Entry<String, ExpensePage.ExpenseData> entry : consolidatedData.entrySet()) {
                     updateView(entry.getKey(), entry.getValue().expense, entry.getValue().percent);
                 }
 
@@ -384,11 +380,11 @@ public class ExpensePage extends AppCompatActivity implements View.OnClickListen
         });
     }
 
-    public static class GoalData {
+    public static class ExpenseData {
         public double expense;
         public int percent;
 
-        public GoalData(double expense, int percent) {
+        public ExpenseData(double expense, int percent) {
             this.expense = expense;
             this.percent = percent;
         }
@@ -426,14 +422,13 @@ public class ExpensePage extends AppCompatActivity implements View.OnClickListen
         n.setMaximumFractionDigits(2);
         n.setMinimumFractionDigits(2);
 
-        DatabaseReference dbSavingsRef = dbFinsec.child("users").child(email3).child(date).child(name);
+        DatabaseReference dbSavingsRef = dbFinsec.child("users").child(email3).child(date).child("Expenses").child(name);
         dbSavingsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
 //                if(snapshot.hasChild())
                 txtCurrentSavings.setText("₱ " + n.format(expense));
-
 
             }
 

@@ -13,6 +13,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.text.NumberFormat;
 
 /**
@@ -69,6 +72,8 @@ public class SchedulepageFragment extends Fragment {
     }
 
     AlertDialog addNewBudget;
+    DatabaseReference dbFinsec = FirebaseDatabase.getInstance().getReferenceFromUrl("https://finsec-14c51-default-rtdb.firebaseio.com/");
+    String email, date;
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -101,6 +106,7 @@ public class SchedulepageFragment extends Fragment {
 //                        dbFinsec.child("users").child(email3).child("goal").setValue(goal);
 //
 //                        setTxtGoal();
+//                        dbFinsec.child("users").child(email3).child("date").child("Budget").child(budgetName).setValue(formattedBudgetValue);
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

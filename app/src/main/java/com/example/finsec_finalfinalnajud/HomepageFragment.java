@@ -4,12 +4,18 @@ import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.activity.result.ActivityResult;
@@ -29,7 +35,9 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 /*
@@ -63,6 +71,9 @@ public class HomepageFragment extends Fragment {
         return view;
     }
 
+    private LinearLayout notificationContainer;
+    private List<Pair<String, String>> notifications = new ArrayList<>();
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -74,6 +85,13 @@ public class HomepageFragment extends Fragment {
                 email3 = encodedEmail;
             }
         }
+
+        notificationContainer = view.findViewById(R.id.notif_list);
+        ImageButton btnNotif = view.findViewById(R.id.imgbtnnotif);
+
+        notifications.add(new Pair<>("Electric Bill", "₱ 200.00"));
+        notifications.add(new Pair<>("Water Bill", "₱ 180.13"));
+        notifications.add(new Pair<>("Wi-Fi", "₱ 1,799.00"));
 
         ImageButton btnFrame = view.findViewById(R.id.imgbtntotalsavings);
         ImageButton btnFrame1 = view.findViewById(R.id.imgbtnexpenses);
@@ -117,6 +135,13 @@ public class HomepageFragment extends Fragment {
                 }
             }
         });
+
+        btnNotif.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addAllNotifications();
+            }
+        });
     }
 
     public static HomepageFragment newInstance(String email) {
@@ -125,6 +150,44 @@ public class HomepageFragment extends Fragment {
         args.putString("encodedEmail", email);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    private void addAllNotifications() {
+        final Handler handler = new Handler();
+        for (int i = 0; i < notifications.size(); i++) {
+            final Pair<String, String> notificationText = notifications.get(i);
+
+            // Delay of i seconds for each notification
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    addNotificationView(notificationText.first, notificationText.second);
+                }
+            }, i * 1000);  // i seconds delay for each notification
+        }
+    }
+
+    private void addNotificationView(String text1, String text2) {
+        View notificationView = getLayoutInflater().inflate(R.layout.notification_system, notificationContainer, false);
+        TextView textView1 = notificationView.findViewById(R.id.txtNotifName);
+        TextView textView2 = notificationView.findViewById(R.id.txtNotifBill);
+
+        // Set the notification text
+        textView1.setText(text1);
+        textView2.setText(text2);
+
+        notificationContainer.addView(notificationView);
+        playNotificationSound();
+    }
+
+    private void playNotificationSound() {
+        try {
+            Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            Ringtone r = RingtoneManager.getRingtone(getContext(), notification);
+            r.play();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void loadTotalSavings(TextView textView) {

@@ -50,7 +50,7 @@ public class AnotherCustomDialog extends AppCompatDialogFragment {
 
         View v = inflater.inflate(R.layout.another_customdialog, null);
 
-        etSavingsAdded = v.findViewById(R.id.etSavingsAdded);
+        etSavingsAdded = v.findViewById(R.id.layoutAmount);
         etGoalName = v.findViewById(R.id.etGoalName);
 
         if(getArguments() != null) {

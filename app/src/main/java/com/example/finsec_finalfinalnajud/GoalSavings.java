@@ -27,8 +27,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import org.w3c.dom.Text;
-
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -95,7 +93,7 @@ public class GoalSavings extends AppCompatActivity implements View.OnClickListen
         View view = getLayoutInflater().inflate(R.layout.another_customdialog, null);
 
         EditText etGoal = view.findViewById(R.id.etGoalName);
-        EditText etSavingsAdded = view.findViewById(R.id.etSavingsAdded);
+        EditText etSavingsAdded = view.findViewById(R.id.layoutAmount);
         builder.setView(view);
         builder.setTitle("Add Goal Savings")
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {

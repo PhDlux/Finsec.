@@ -6,7 +6,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -27,7 +26,6 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -38,8 +36,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import org.w3c.dom.Text;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -115,7 +111,7 @@ public class ExpensePage extends AppCompatActivity implements View.OnClickListen
         View view = getLayoutInflater().inflate(R.layout.expense_customdialog, null);
 
         EditText etGoal = view.findViewById(R.id.etGoalName);
-        EditText etSavingsAdded = view.findViewById(R.id.etSavingsAdded);
+        EditText etSavingsAdded = view.findViewById(R.id.layoutAmount);
         builder.setView(view);
         builder.setTitle("Add Expenses")
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {

@@ -7,7 +7,7 @@
     android:background="@drawable/homepagebg"
     tools:context=".SchedulepageFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -236,6 +236,112 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.144" />
+        <View
+            android:id="@+id/overlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/semi_transparent"
+            android:visibility="gone" />
+
+                <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                    android:id="@+id/add_fab"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="24dp"
+                    android:layout_marginBottom="70dp"
+                    android:clickable="true"
+                    android:elevation="15dp"
+                    android:focusable="true"
+                    android:fontFamily="@font/nunitobold"
+                    android:text="actions"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    app:backgroundTint="@color/black"
+                    app:icon="@drawable/ic_add"
+                    app:iconTint="@color/white"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/schedBudget_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:clickable="true"
+            android:src="@drawable/ic_schedulebudget"
+            app:backgroundTint="#F1F1F1"
+            app:elevation="15dp"
+            app:layout_constraintBottom_toTopOf="@+id/add_fab"
+            app:layout_constraintEnd_toEndOf="@+id/add_fab" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/schedExpense_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:clickable="true"
+            android:src="@drawable/ic_schedulebills"
+            app:backgroundTint="#F1F1F1"
+            app:elevation="15dp"
+            app:layout_constraintBottom_toTopOf="@+id/schedBudget_fab"
+            app:layout_constraintEnd_toEndOf="@+id/schedBudget_fab" />
+
+        <TextView
+            android:id="@+id/txtFABbudget"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:text="Budget"
+            android:elevation="15dp"
+            android:textAllCaps="true"
+            android:textColor="#222222"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/schedBudget_fab"
+            app:layout_constraintEnd_toStartOf="@+id/schedBudget_fab"
+            app:layout_constraintTop_toTopOf="@+id/schedBudget_fab" />
+
+        <TextView
+            android:id="@+id/txtFABexpense"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:text="Expenses"
+            android:elevation="15dp"
+            android:textAllCaps="true"
+            android:textColor="#222222"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/schedExpense_fab"
+            app:layout_constraintEnd_toStartOf="@+id/schedExpense_fab"
+            app:layout_constraintTop_toTopOf="@+id/schedExpense_fab" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/schedBills_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:clickable="true"
+            android:src="@drawable/ic_billsfab"
+            app:backgroundTint="#F1F1F1"
+            app:elevation="15dp"
+            app:layout_constraintBottom_toTopOf="@+id/schedExpense_fab"
+            app:layout_constraintEnd_toEndOf="@+id/schedExpense_fab" />
+
+        <TextView
+            android:id="@+id/txtFABbills"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:text="Bills"
+            android:textAllCaps="true"
+            android:textColor="#022222"
+            android:textStyle="bold"
+            android:elevation="15dp"
+            app:layout_constraintBottom_toBottomOf="@+id/schedBills_fab"
+            app:layout_constraintEnd_toStartOf="@+id/schedBills_fab"
+            app:layout_constraintTop_toTopOf="@+id/schedBills_fab" />
+
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

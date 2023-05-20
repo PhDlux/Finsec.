@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/homepage"
+    android:id="@+id/root_view"
     tools:context=".HomePage">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -186,6 +187,7 @@
             <!--            app:menu="@menu/bottom_menu"-->
             <!--            />-->
         </LinearLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

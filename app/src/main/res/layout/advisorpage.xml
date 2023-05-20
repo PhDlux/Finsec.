@@ -67,7 +67,7 @@
                     android:id="@+id/imgbtnchinkee"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginLeft="5dp"
                     android:layout_marginTop="8dp"
                     android:layout_weight="1"
                     android:background="#00FFFFFF"
@@ -79,6 +79,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="3dp"
                     android:layout_marginTop="5dp"
+                    android:layout_marginEnd="8dp"
                     android:layout_weight="1"
                     android:background="#00FFFFFF"
                     android:src="@drawable/fitz" />
@@ -87,7 +88,8 @@
                     android:id="@+id/imgbtnrandell"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginEnd="50dp"
                     android:layout_marginBottom="5dp"
                     android:layout_weight="1"
                     android:background="#00FFFFFF"
@@ -135,6 +137,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
+                    android:layout_marginEnd="-10dp"
                     android:background="#00FFFFFF"
                     android:src="@drawable/warren" />
 
@@ -144,6 +147,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="-9dp"
                     android:layout_marginTop="10dp"
+                    android:layout_marginEnd="-23dp"
                     android:layout_weight="1"
                     android:background="#00FFFFFF"
                     android:src="@drawable/peter" />
@@ -153,6 +157,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="-23dp"
+                    android:layout_marginEnd="45dp"
                     android:layout_weight="1"
                     android:background="#00FFFFFF"
                     android:src="@drawable/taylor" />

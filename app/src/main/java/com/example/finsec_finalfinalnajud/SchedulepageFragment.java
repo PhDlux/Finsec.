@@ -6,13 +6,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -74,9 +79,67 @@ public class SchedulepageFragment extends Fragment {
     AlertDialog addNewBudget;
     DatabaseReference dbFinsec = FirebaseDatabase.getInstance().getReferenceFromUrl("https://finsec-14c51-default-rtdb.firebaseio.com/");
     String email, date;
+    FloatingActionButton addBudgetFab, addExpenseFab, addBillsFab;
+    ExtendedFloatingActionButton addActionsFab;
+    TextView txtBudgetFab, txtExpenseFab,txtBillsFab;
+    View overlay;
+    boolean isAllFABVisible;
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        addBudgetFab = view.findViewById(R.id.schedBudget_fab);
+        addExpenseFab = view.findViewById(R.id.schedExpense_fab);
+        addBillsFab = view.findViewById(R.id.schedBills_fab);
+        addActionsFab = view.findViewById(R.id.add_fab);
+
+        txtBudgetFab = view.findViewById(R.id.txtFABbudget);
+        txtExpenseFab = view.findViewById(R.id.txtFABexpense);
+        txtBillsFab = view.findViewById(R.id.txtFABbills);
+
+        addBudgetFab.setVisibility(View.GONE);
+        addExpenseFab.setVisibility(View.GONE);
+        addBillsFab.setVisibility(View.GONE);
+        txtBudgetFab.setVisibility(View.GONE);
+        txtExpenseFab.setVisibility(View.GONE);
+        txtBillsFab.setVisibility(View.GONE);
+
+        overlay = view.findViewById(R.id.overlay);
+        isAllFABVisible = false;
+
+        addActionsFab.shrink();
+        addActionsFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(!isAllFABVisible) {
+                    overlay.setVisibility(View.VISIBLE);
+
+                    addBudgetFab.show();
+                    addExpenseFab.show();
+                    addBillsFab.show();
+                    txtBudgetFab.setVisibility(View.VISIBLE);
+                    txtExpenseFab.setVisibility(View.VISIBLE);
+                    txtBillsFab.setVisibility(View.VISIBLE);
+
+                    addActionsFab.extend();
+
+                    isAllFABVisible = true;
+                } else {
+                    overlay.setVisibility(View.GONE);
+
+                    addBudgetFab.hide();
+                    addExpenseFab.hide();
+                    addBillsFab.hide();
+                    txtBudgetFab.setVisibility(View.GONE);
+                    txtExpenseFab.setVisibility(View.GONE);
+                    txtBillsFab.setVisibility(View.GONE);
+
+                    addActionsFab.shrink();
+
+                    isAllFABVisible = false;
+                }
+            }
+        });
 
 
     }

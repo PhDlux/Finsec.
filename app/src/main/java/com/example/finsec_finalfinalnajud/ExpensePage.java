@@ -22,6 +22,17 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -32,7 +43,12 @@ import org.w3c.dom.Text;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -51,6 +67,11 @@ public class ExpensePage extends AppCompatActivity implements View.OnClickListen
     String goal, date;
     ProgressBar progressBar;
     HashMap<String, Integer> indexMap = new HashMap<>();
+    ArrayList barArrayList;
+    BarChart barChart;
+    BarDataSet barDataSet;
+    BarData barData;
+    TextView txtExpensePercent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,17 +84,17 @@ public class ExpensePage extends AppCompatActivity implements View.OnClickListen
         email3 = i.getStringExtra("email2");
         date = i.getStringExtra("currentDate");
 
-
         txtCurrentSavings = findViewById(R.id.txtCurrentSavings);
 
+        txtExpensePercent = findViewById(R.id.txtExpensePercent);
 
         btnAddSavings.setOnClickListener(this);
         back.setOnClickListener(this);
 
-
         buildNewGoalDialog();
         buildAddSavingsDialog();
         loadData();
+        displayGraph();
 
         int backgroundColor = Color.parseColor("#F1F1F1");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -253,6 +274,7 @@ public class ExpensePage extends AppCompatActivity implements View.OnClickListen
                         String dbPercent = dateSnapshot.child("Expenses").child(goalname).child("percent").getValue(String.class);
 
                         double dbExpenseValue = Double.parseDouble(dbExpense);
+                        int dbPercentValue = Integer.parseInt(dbPercent);
 
                         expenseData.expense += dbExpenseValue;
                     }
@@ -305,63 +327,71 @@ public class ExpensePage extends AppCompatActivity implements View.OnClickListen
     }
 
     public void loadData() {
-
         setTxtGoal();
+        updateMonthBasedOnCurrentDate();
         DatabaseReference userRef = dbFinsec.child("users").child(email3);
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 removeAllViewsExceptLast();
 
-                // A map to store the consolidated data
-                Map<String, ExpensePage.ExpenseData> consolidatedData = new HashMap<>();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+                String currentDateString = LocalDate.now().format(formatter);
+                String currentMonth = currentDateString.substring(0, 2);
+                String currentYear = currentDateString.substring(6, 10);
+                String currentDate = currentYear + "-" + currentMonth;
 
-                // Variables to store the total savings
+                Map<String, ExpensePage.ExpenseData> consolidatedData = new HashMap<>();
                 double totalSavings = 0;
+                int totalPercent = 0;
 
                 for (DataSnapshot dateSnapshot : snapshot.getChildren()) {
                     String date = dateSnapshot.getKey();
 
-                    // Skip if it is otherfields
                     if (date.equals("contactNumber") || date.equals("dateofbirth") || date.equals("firstname")
                             || date.equals("gender") || date.equals("goal") || date.equals("lastname")
                             || date.equals("password")) continue;
 
-                    for (DataSnapshot goalSnapshot : dateSnapshot.child("Expenses").getChildren()) {
-                        String goalName = goalSnapshot.getKey();
+                    String snapshotYear = date.substring(6, 10);
+                    String snapshotMonth = date.substring(0, 2);
+                    String snapshotDate = snapshotYear + "-" + snapshotMonth;
+                    boolean isSameMonth = snapshotDate.equals(currentDate);
 
-                        // Check for null values
-                        if (goalSnapshot.child("expense").getValue() != null && goalSnapshot.child("percent").getValue() != null) {
-                            String savingsStr = goalSnapshot.child("expense").getValue(String.class);
-                            String percentStr = goalSnapshot.child("percent").getValue(String.class);
+                    if (isSameMonth) {
+                        for (DataSnapshot goalSnapshot : dateSnapshot.child("Expenses").getChildren()) {
+                            String goalName = goalSnapshot.getKey();
 
-                            double expense = 0;
-                            int percent = 0;
+                            if (goalSnapshot.child("expense").getValue() != null && goalSnapshot.child("percent").getValue() != null) {
+                                String savingsStr = goalSnapshot.child("expense").getValue(String.class);
+                                String percentStr = goalSnapshot.child("percent").getValue(String.class);
 
-                            try {
-                                expense = Double.parseDouble(savingsStr);
-                                percent = Integer.parseInt(percentStr);
-                            } catch (NumberFormatException e) {
-                                Log.e(TAG, "Failed to parse savings or percent for goal " + goalName);
-                            }
+                                double expense = 0;
+                                int percent = 0;
 
-                            // Consolidate data
-                            if (consolidatedData.containsKey(goalName)) {
-                                ExpensePage.ExpenseData existingExpenseData = consolidatedData.get(goalName);
-                                existingExpenseData .expense += expense;
-                                existingExpenseData .percent += percent;
+                                try {
+                                    expense = Double.parseDouble(savingsStr);
+                                    percent = Integer.parseInt(percentStr);
+                                } catch (NumberFormatException e) {
+                                    Log.e(TAG, "Failed to parse savings or percent for goal " + goalName);
+                                }
+
+                                if (consolidatedData.containsKey(goalName)) {
+                                    ExpensePage.ExpenseData existingExpenseData = consolidatedData.get(goalName);
+                                    existingExpenseData.expense += expense;
+                                    existingExpenseData.percent += percent;
+                                } else {
+                                    consolidatedData.put(goalName, new ExpensePage.ExpenseData(expense, percent));
+                                }
+
+                                totalSavings += expense;
+                                totalPercent += percent;
                             } else {
-                                consolidatedData.put(goalName, new ExpensePage.ExpenseData(expense, percent));
+                                Log.e(TAG, "Null value for savings or percent for goal " + goalName);
                             }
-
-                            totalSavings += expense;
-                        } else {
-                            Log.e(TAG, "Null value for savings or percent for goal " + goalName);
                         }
                     }
                 }
 
-                // Update views with consolidated data
                 for (Map.Entry<String, ExpensePage.ExpenseData> entry : consolidatedData.entrySet()) {
                     updateView(entry.getKey(), entry.getValue().expense, entry.getValue().percent);
                 }
@@ -371,6 +401,7 @@ public class ExpensePage extends AppCompatActivity implements View.OnClickListen
                 n.setMinimumFractionDigits(2);
 
                 txtCurrentSavings.setText("₱ " + n.format(totalSavings));
+                txtExpensePercent.setText("+" + totalPercent + "%");
             }
 
             @Override
@@ -379,6 +410,7 @@ public class ExpensePage extends AppCompatActivity implements View.OnClickListen
             }
         });
     }
+
 
     public static class ExpenseData {
         public double expense;
@@ -439,8 +471,315 @@ public class ExpensePage extends AppCompatActivity implements View.OnClickListen
         });
 
     }
+
+    public void setTxtExpensePercent() {
+        DatabaseReference userRef = dbFinsec.child("users").child(email3);
+
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+                String currentDateString = LocalDate.now().format(formatter);
+                String currentMonth = currentDateString.substring(0, 2);
+                String currentYear = currentDateString.substring(6, 10);
+                String currentDate = currentYear + "-" + currentMonth;
+
+                int totalPercent = 0;
+
+                for (DataSnapshot dateSnapshot : snapshot.getChildren()) {
+                    String date = dateSnapshot.getKey();
+
+                    if (date.equals("contactNumber") || date.equals("dateofbirth") || date.equals("firstname")
+                            || date.equals("gender") || date.equals("goal") || date.equals("lastname")
+                            || date.equals("password")) continue;
+
+                    String snapshotYear = date.substring(6, 10);
+                    String snapshotMonth = date.substring(0, 2);
+                    String snapshotDate = snapshotYear + "-" + snapshotMonth;
+                    boolean isSameMonth = snapshotDate.equals(currentDate);
+
+                    if (isSameMonth) {
+                        for (DataSnapshot goalSnapshot : dateSnapshot.child("Expenses").getChildren()) {
+                            if (goalSnapshot.child("percent").getValue() != null) {
+                                String percentStr = goalSnapshot.child("percent").getValue(String.class);
+
+                                int percent = 0;
+
+                                try {
+                                    percent = Integer.parseInt(percentStr);
+                                } catch (NumberFormatException e) {
+                                    Log.e(TAG, "Failed to parse percent for goal " + goalSnapshot.getKey());
+                                }
+
+                                totalPercent += percent;
+                            } else {
+                                Log.e(TAG, "Null value for percent for goal " + goalSnapshot.getKey());
+                            }
+                        }
+                    }
+                }
+
+                txtExpensePercent.setText("+" + totalPercent + "%");
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
     public static boolean isColorDark(int color) {
         double darkness = 1 - (0.299 * Color.red(color) + 0.587 * Color.green(color) + 0.114 * Color.blue(color)) / 255;
         return darkness >= 0.5;
     }
+
+//    private void displayGraph() {
+//        barChart = findViewById(R.id.barchart);
+//        getData();
+//        barDataSet = new BarDataSet(barArrayList, "Finsec.");
+//        barData = new BarData(barDataSet);
+//        barChart.setData(barData);
+//        barDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+//        barDataSet.setValueTextColor(Color.BLACK);
+//        barDataSet.setValueTextSize(16f);
+//        barChart.getDescription().setEnabled(true);
+//    }
+//    private void getData() {
+//        barArrayList = new ArrayList();
+//        barArrayList.add(new BarEntry(2f, 10));
+//        barArrayList.add(new BarEntry(3f, 20));
+//        barArrayList.add(new BarEntry(4f, 30));
+//        barArrayList.add(new BarEntry(5f, 40));
+//        barArrayList.add(new BarEntry(6f, 50));
+//    }
+//ArrayList<BarEntry> barEntries;
+//    private void displayGraph() {
+//        barChart = findViewById(R.id.barchart);
+//
+//        getDataAndUpdateChart();
+//
+//        XAxis xAxis = barChart.getXAxis();
+//        xAxis.setValueFormatter(new IndexAxisValueFormatter(Arrays.asList("SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT")));
+//        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+//        xAxis.setGranularity(1f);
+//        xAxis.setCenterAxisLabels(false);
+//        xAxis.setGranularityEnabled(true);
+//
+//        barChart.getDescription().setEnabled(true);
+//    }
+//
+//    private void getDataAndUpdateChart() {
+//        dbFinsec.child("users").child(email3).addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                HashMap<String, Float> expenseData = new HashMap<>();
+//                for (DataSnapshot dateSnapshot : snapshot.getChildren()) {
+//                    String dateString = dateSnapshot.getKey();
+//
+//                    if (isValidDate(dateString)){
+//                        String dayOfWeek = getDayOfWeek(dateString);
+//                        float totalExpense = 0f;
+//
+//                        for (DataSnapshot expensesSnapshot : dateSnapshot.getChildren()) {
+//                            if(expensesSnapshot.getKey().equals("Expenses")) {
+//                                for (DataSnapshot expenseNameSnapshot : expensesSnapshot.getChildren()) {
+//                                    String expenseValue = expenseNameSnapshot.child("expense").getValue(String.class);
+//                                    totalExpense += Float.parseFloat(expenseValue);
+//                                }
+//                            }
+//                        }
+//                        expenseData.put(dayOfWeek, totalExpense);
+//                    }
+//                }
+//
+//                barEntries = new ArrayList<>();
+//                int index = 0;
+//                for (String dayOfWeek : Arrays.asList("SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT")) {
+//                    Float totalExpense = expenseData.getOrDefault(dayOfWeek, 0f);
+//                    barEntries.add(new BarEntry(index++, totalExpense));
+//                }
+//
+//                barDataSet = new BarDataSet(barEntries, "Finsec.");
+//                barData = new BarData(barDataSet);
+//                barChart.setData(barData);
+//
+//                barDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+//                barDataSet.setValueTextColor(Color.BLACK);
+//                barDataSet.setValueTextSize(16f);
+//
+//                barChart.notifyDataSetChanged();
+//                barChart.invalidate();
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//                // Error handling
+//            }
+//        });
+//    }
+//
+//    private boolean isValidDate(String dateString){
+//        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
+//        sdf.setLenient(false);
+//        try{
+//            sdf.parse(dateString);
+//            return true;
+//        } catch(ParseException e){
+//            return false;
+//        }
+//    }
+//
+//    private String getDayOfWeek(String dateString){
+//        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
+//        try{
+//            Date date = sdf.parse(dateString);
+//            SimpleDateFormat simpleDateformat = new SimpleDateFormat("EEE"); // the day of the week abbreviated
+//            return simpleDateformat.format(date).toUpperCase();
+//        } catch(ParseException e){
+//            return "";
+//        }
+//    }
+ArrayList<Entry> lineEntries;
+    LineChart lineChart;
+    LineDataSet lineDataSet;
+    LineData lineData;
+
+    private void displayGraph() {
+        lineChart = findViewById(R.id.linechart);
+        getDataAndUpdateChart();
+
+        XAxis xAxis = lineChart.getXAxis();
+        xAxis.setValueFormatter(new IndexAxisValueFormatter(Arrays.asList("SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT")));
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setGranularity(1f);
+        xAxis.setCenterAxisLabels(false);
+        xAxis.setGranularityEnabled(true);
+
+        lineChart.getDescription().setEnabled(true);
+    }
+
+    private void getDataAndUpdateChart() {
+        dbFinsec.child("users").child(email3).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                HashMap<String, Float> expenseData = new HashMap<>();
+                for (DataSnapshot dateSnapshot : snapshot.getChildren()) {
+                    String dateString = dateSnapshot.getKey();
+
+                    if (isValidDate(dateString)){
+                        String dayOfWeek = getDayOfWeek(dateString);
+                        float totalExpense = 0f;
+
+                        for (DataSnapshot expensesSnapshot : dateSnapshot.getChildren()) {
+                            if(expensesSnapshot.getKey().equals("Expenses")) {
+                                for (DataSnapshot expenseNameSnapshot : expensesSnapshot.getChildren()) {
+                                    String expenseValue = expenseNameSnapshot.child("expense").getValue(String.class);
+                                    totalExpense += Float.parseFloat(expenseValue);
+                                }
+                            }
+                        }
+                        expenseData.put(dayOfWeek, totalExpense);
+                    }
+                }
+
+                lineEntries = new ArrayList<>();
+                int index = 0;
+                for (String dayOfWeek : Arrays.asList("SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT")) {
+                    Float totalExpense = expenseData.getOrDefault(dayOfWeek, 0f);
+                    lineEntries.add(new Entry(index++, totalExpense));
+                }
+
+                lineDataSet = new LineDataSet(lineEntries, "Finsec.");
+                lineData = new LineData(lineDataSet);
+                lineChart.setData(lineData);
+
+                lineDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+                lineDataSet.setValueTextColor(Color.BLACK);
+                lineDataSet.setValueTextSize(16f);
+
+                lineChart.notifyDataSetChanged();
+                lineChart.invalidate();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Error handling
+            }
+        });
+    }
+
+    private boolean isValidDate(String dateString){
+        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
+        sdf.setLenient(false);
+        try{
+            sdf.parse(dateString);
+            return true;
+        } catch(ParseException e){
+            return false;
+        }
+    }
+
+    private String getDayOfWeek(String dateString){
+        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
+        try{
+            Date date = sdf.parse(dateString);
+            SimpleDateFormat simpleDateformat = new SimpleDateFormat("EEE"); // the day of the week abbreviated
+            return simpleDateformat.format(date).toUpperCase();
+        } catch(ParseException e){
+            return "";
+        }
+    }
+
+    private void updateMonthBasedOnCurrentDate() {
+
+        dbFinsec.child("users").child(email3).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String latestDate = null;
+
+                for (DataSnapshot dateSnapshot : snapshot.getChildren()) {
+                    String key = dateSnapshot.getKey();
+                    if (isValidDate(key)) {
+                        if (latestDate == null || key.compareTo(latestDate) > 0) {
+                            latestDate = key;
+                        }
+                    }
+                }
+
+                if (latestDate != null) {
+                    setMonthInTextView(latestDate);
+                } else {
+                    setMonthInTextView(getCurrentDate());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Error handling
+            }
+        });
+    }
+
+    private void setMonthInTextView(String dateStringFromDb) {
+        SimpleDateFormat dbSdf = new SimpleDateFormat("MM-dd-yyyy"); // Assuming this is the format of your date in the database
+        try {
+            Date date = dbSdf.parse(dateStringFromDb);
+            SimpleDateFormat monthSdf = new SimpleDateFormat("MMMM"); // "MMMM" for full name of the month
+            String month = monthSdf.format(date);
+
+            TextView txtMonthof = findViewById(R.id.txtMonthof);
+            txtMonthof.setText("Month of " + month);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String getCurrentDate() {
+        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
+        return sdf.format(new Date());
+    }
+
+
+
 }

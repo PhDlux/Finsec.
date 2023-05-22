@@ -100,6 +100,8 @@ public class HomepageFragment extends Fragment {
         TextView txtHelloUser = view.findViewById(R.id.txthello);
         TextView txtUser = view.findViewById(R.id.txtuser);
         TextView txtSavingsNum = view.findViewById(R.id.txtsavingsnum);
+        TextView txtExpensesNum = view.findViewById(R.id.txtexpensesnum);
+        TextView txtExpensesArrow = view.findViewById(R.id.txtexpensesarrow);
         TextView txtSavingsArrow = view.findViewById(R.id.txtsavingsarrow);
         SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy", Locale.getDefault());
         String currentDate = sdf.format(new Date());
@@ -112,6 +114,7 @@ public class HomepageFragment extends Fragment {
         setGreeting(txtHelloUser);
         setUserFullName(txtUser);
         setDailySavings(txtSavingsNum, txtSavingsArrow, currentDate);
+        setDailyExpenses(txtExpensesNum, txtExpensesArrow, currentDate);
         btnFrame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -340,5 +343,52 @@ public class HomepageFragment extends Fragment {
             }
         });
     }
+
+    private void setDailyExpenses(TextView txtExpensesNum, TextView txtExpensesArrow, String date) {
+        if (email3 == null) {
+            Log.e(TAG, "email3 is null");
+            return;
+        }
+
+        DatabaseReference userRef = dbFinsec.child("users").child(email3).child(date);
+        userRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                double totalExpenses = 0;
+                for (DataSnapshot expenseSnapshot : snapshot.child("Expenses").getChildren()) {
+                    if (expenseSnapshot.child("expense").getValue() != null) {
+                        String expenseStr = expenseSnapshot.child("expense").getValue(String.class);
+
+                        double expense = 0;
+                        try {
+                            expense = Double.parseDouble(expenseStr);
+                        } catch (NumberFormatException e) {
+                            Log.e(TAG, "Failed to parse expense for date " + date);
+                        }
+
+                        totalExpenses += expense;
+                    } else {
+                        Log.e(TAG, "Null value for expense for date " + date);
+                    }
+                }
+
+                NumberFormat n = NumberFormat.getInstance();
+                n.setMaximumFractionDigits(2);
+                n.setMinimumFractionDigits(2);
+                txtExpensesNum.setText(String.format("₱ " + n.format(totalExpenses)));
+                if (totalExpenses > 0) {
+                    txtExpensesArrow.setText("⬆");
+                } else {
+                    txtExpensesArrow.setText("-");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Handle error...
+            }
+        });
+    }
+
 
 }

@@ -26,11 +26,14 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -44,6 +47,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -68,6 +72,7 @@ public class ExpensePage extends AppCompatActivity implements View.OnClickListen
     BarDataSet barDataSet;
     BarData barData;
     TextView txtExpensePercent;
+    private int currentWeekOfYear;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,6 +88,8 @@ public class ExpensePage extends AppCompatActivity implements View.OnClickListen
         txtCurrentSavings = findViewById(R.id.txtCurrentSavings);
 
         txtExpensePercent = findViewById(R.id.txtExpensePercent);
+
+        currentWeekOfYear = getWeekOfYear(new SimpleDateFormat("MM-dd-yyyy").format(new Date()));
 
         btnAddSavings.setOnClickListener(this);
         back.setOnClickListener(this);
@@ -124,6 +131,7 @@ public class ExpensePage extends AppCompatActivity implements View.OnClickListen
                             double temp = n.parse(txtCurrentSavings.getText().toString().substring(1).replace(",", "")).doubleValue();
                             String num;
                             double goals;
+                            int tempPer = Integer.parseInt(txtExpensePercent.getText().toString().substring(1, txtExpensePercent.getText().toString().indexOf("%")));
 
                             if(goal==null) {
                                 goal = txtGoal.getText().toString().substring(2);
@@ -154,7 +162,8 @@ public class ExpensePage extends AppCompatActivity implements View.OnClickListen
                                     String expense = etSavingsAdded.getText().toString();
                                     String dbPercent = String.valueOf(percent);
                                     if(!snapshot.hasChild(etGoal.getText().toString())) {
-                                        dateRef.child(etGoal.getText().toString());
+                                        dateRef.child(etGoal.getText().toString()).child("expense").setValue("0");
+                                        dateRef.child(etGoal.getText().toString()).child("percent").setValue("0");
                                     } else {
                                         String dbSavingsVal = snapshot.child(etGoal.getText().toString()).child("expense").getValue(String.class);
                                         String percentVal = snapshot.child(etGoal.getText().toString()).child("percent").getValue(String.class);
@@ -163,10 +172,31 @@ public class ExpensePage extends AppCompatActivity implements View.OnClickListen
                                             throw new IllegalArgumentException("You have reached your goal. Set another one!");
                                         }
                                         int finalSavings = fs;
+                                        int finalPercent = Integer.parseInt(percentVal) + Integer.parseInt(dbPercent);
                                         expense = String.valueOf(finalSavings);
+                                        dbPercent = String.valueOf(finalPercent);
                                     }
                                     dateRef.child(etGoal.getText().toString()).child("expense").setValue(expense);
                                     dateRef.child(etGoal.getText().toString()).child("percent").setValue(dbPercent);
+
+                                    String finalDbPercent = dbPercent;
+                                    dateRef.child(etGoal.getText().toString()).child("expense").setValue(expense)
+                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if (task.isSuccessful()) {
+                                                        dateRef.child(etGoal.getText().toString()).child("percent").setValue(finalDbPercent)
+                                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                    @Override
+                                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                                        if (task.isSuccessful()) {
+                                                                            setTxtExpensePercent();
+                                                                        }
+                                                                    }
+                                                                });
+                                                    }
+                                                }
+                                            });
                                 }
 
                                 @Override
@@ -334,7 +364,7 @@ public class ExpensePage extends AppCompatActivity implements View.OnClickListen
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
                 String currentDateString = LocalDate.now().format(formatter);
                 String currentMonth = currentDateString.substring(0, 2);
-                String currentYear = currentDateString.substring(6, 10);
+                String currentYear = currentDateString.substring(4, 8);
                 String currentDate = currentYear + "-" + currentMonth;
 
                 Map<String, ExpensePage.ExpenseData> consolidatedData = new HashMap<>();
@@ -343,12 +373,12 @@ public class ExpensePage extends AppCompatActivity implements View.OnClickListen
 
                 for (DataSnapshot dateSnapshot : snapshot.getChildren()) {
                     String date = dateSnapshot.getKey();
-
+                    Log.d(TAG, "Processing date: " + date);
                     if (date.equals("contactNumber") || date.equals("dateofbirth") || date.equals("firstname")
                             || date.equals("gender") || date.equals("goal") || date.equals("lastname")
                             || date.equals("password")) continue;
 
-                    String snapshotYear = date.substring(6, 10);
+                    String snapshotYear = date.substring(4, 8);
                     String snapshotMonth = date.substring(0, 2);
                     String snapshotDate = snapshotYear + "-" + snapshotMonth;
                     boolean isSameMonth = snapshotDate.equals(currentDate);
@@ -474,6 +504,7 @@ public class ExpensePage extends AppCompatActivity implements View.OnClickListen
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
                 String currentDateString = LocalDate.now().format(formatter);
                 String currentMonth = currentDateString.substring(0, 2);
@@ -489,7 +520,7 @@ public class ExpensePage extends AppCompatActivity implements View.OnClickListen
                             || date.equals("gender") || date.equals("goal") || date.equals("lastname")
                             || date.equals("password")) continue;
 
-                    String snapshotYear = date.substring(6, 10);
+                    String snapshotYear = date.substring(4, 8);
                     String snapshotMonth = date.substring(0, 2);
                     String snapshotDate = snapshotYear + "-" + snapshotMonth;
                     boolean isSameMonth = snapshotDate.equals(currentDate);
@@ -549,110 +580,19 @@ public class ExpensePage extends AppCompatActivity implements View.OnClickListen
 //        barArrayList.add(new BarEntry(5f, 40));
 //        barArrayList.add(new BarEntry(6f, 50));
 //    }
-//ArrayList<BarEntry> barEntries;
-//    private void displayGraph() {
-//        barChart = findViewById(R.id.barchart);
-//
-//        getDataAndUpdateChart();
-//
-//        XAxis xAxis = barChart.getXAxis();
-//        xAxis.setValueFormatter(new IndexAxisValueFormatter(Arrays.asList("SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT")));
-//        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-//        xAxis.setGranularity(1f);
-//        xAxis.setCenterAxisLabels(false);
-//        xAxis.setGranularityEnabled(true);
-//
-//        barChart.getDescription().setEnabled(true);
-//    }
-//
-//    private void getDataAndUpdateChart() {
-//        dbFinsec.child("users").child(email3).addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                HashMap<String, Float> expenseData = new HashMap<>();
-//                for (DataSnapshot dateSnapshot : snapshot.getChildren()) {
-//                    String dateString = dateSnapshot.getKey();
-//
-//                    if (isValidDate(dateString)){
-//                        String dayOfWeek = getDayOfWeek(dateString);
-//                        float totalExpense = 0f;
-//
-//                        for (DataSnapshot expensesSnapshot : dateSnapshot.getChildren()) {
-//                            if(expensesSnapshot.getKey().equals("Expenses")) {
-//                                for (DataSnapshot expenseNameSnapshot : expensesSnapshot.getChildren()) {
-//                                    String expenseValue = expenseNameSnapshot.child("expense").getValue(String.class);
-//                                    totalExpense += Float.parseFloat(expenseValue);
-//                                }
-//                            }
-//                        }
-//                        expenseData.put(dayOfWeek, totalExpense);
-//                    }
-//                }
-//
-//                barEntries = new ArrayList<>();
-//                int index = 0;
-//                for (String dayOfWeek : Arrays.asList("SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT")) {
-//                    Float totalExpense = expenseData.getOrDefault(dayOfWeek, 0f);
-//                    barEntries.add(new BarEntry(index++, totalExpense));
-//                }
-//
-//                barDataSet = new BarDataSet(barEntries, "Finsec.");
-//                barData = new BarData(barDataSet);
-//                barChart.setData(barData);
-//
-//                barDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
-//                barDataSet.setValueTextColor(Color.BLACK);
-//                barDataSet.setValueTextSize(16f);
-//
-//                barChart.notifyDataSetChanged();
-//                barChart.invalidate();
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//                // Error handling
-//            }
-//        });
-//    }
-//
-//    private boolean isValidDate(String dateString){
-//        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
-//        sdf.setLenient(false);
-//        try{
-//            sdf.parse(dateString);
-//            return true;
-//        } catch(ParseException e){
-//            return false;
-//        }
-//    }
-//
-//    private String getDayOfWeek(String dateString){
-//        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
-//        try{
-//            Date date = sdf.parse(dateString);
-//            SimpleDateFormat simpleDateformat = new SimpleDateFormat("EEE"); // the day of the week abbreviated
-//            return simpleDateformat.format(date).toUpperCase();
-//        } catch(ParseException e){
-//            return "";
-//        }
-//    }
-ArrayList<Entry> lineEntries;
-    LineChart lineChart;
-    LineDataSet lineDataSet;
-    LineData lineData;
-
+ArrayList<BarEntry> barEntries = new ArrayList<>();
     private void displayGraph() {
-        lineChart = findViewById(R.id.linechart);
+        barChart = findViewById(R.id.barchart);
         getDataAndUpdateChart();
 
-        XAxis xAxis = lineChart.getXAxis();
+        XAxis xAxis = barChart.getXAxis();
         xAxis.setValueFormatter(new IndexAxisValueFormatter(Arrays.asList("SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT")));
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setGranularity(1f);
         xAxis.setCenterAxisLabels(false);
         xAxis.setGranularityEnabled(true);
 
-        lineChart.getDescription().setEnabled(true);
+        barChart.getDescription().setEnabled(true);
     }
 
     private void getDataAndUpdateChart() {
@@ -660,10 +600,27 @@ ArrayList<Entry> lineEntries;
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 HashMap<String, Float> expenseData = new HashMap<>();
+                String lastDate = "";
                 for (DataSnapshot dateSnapshot : snapshot.getChildren()) {
                     String dateString = dateSnapshot.getKey();
 
                     if (isValidDate(dateString)){
+                        if (!lastDate.equals("")) {
+                            int weekOfYear = getWeekOfYear(dateString);
+                            int lastWeekOfYear = getWeekOfYear(lastDate);
+                            if (weekOfYear != lastWeekOfYear) {
+                                // A new week has started
+                                expenseData.clear();
+                                if (barEntries != null) {
+                                    barEntries.clear();
+                                }
+                                if (barDataSet != null) {
+                                    barDataSet.clear();
+                                }
+                            }
+                        }
+                        lastDate = dateString;
+
                         String dayOfWeek = getDayOfWeek(dateString);
                         float totalExpense = 0f;
 
@@ -679,23 +636,23 @@ ArrayList<Entry> lineEntries;
                     }
                 }
 
-                lineEntries = new ArrayList<>();
+
                 int index = 0;
                 for (String dayOfWeek : Arrays.asList("SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT")) {
                     Float totalExpense = expenseData.getOrDefault(dayOfWeek, 0f);
-                    lineEntries.add(new Entry(index++, totalExpense));
+                    barEntries.add(new BarEntry(index++, totalExpense));
                 }
 
-                lineDataSet = new LineDataSet(lineEntries, "Finsec.");
-                lineData = new LineData(lineDataSet);
-                lineChart.setData(lineData);
+                barDataSet = new BarDataSet(barEntries, "Finsec.");
+                barData = new BarData(barDataSet);
+                barChart.setData(barData);
 
-                lineDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
-                lineDataSet.setValueTextColor(Color.BLACK);
-                lineDataSet.setValueTextSize(16f);
+                barDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+                barDataSet.setValueTextColor(Color.BLACK);
+                barDataSet.setValueTextSize(16f);
 
-                lineChart.notifyDataSetChanged();
-                lineChart.invalidate();
+                barChart.notifyDataSetChanged();
+                barChart.invalidate();
             }
 
             @Override
@@ -726,6 +683,135 @@ ArrayList<Entry> lineEntries;
             return "";
         }
     }
+
+    private int getWeekOfYear(String dateString){
+        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
+        try{
+            Date date = sdf.parse(dateString);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            return calendar.get(Calendar.WEEK_OF_YEAR);
+        } catch(ParseException e){
+            return -1;
+        }
+    }
+//    ArrayList<Entry> lineEntries = new ArrayList<>();
+//    LineChart lineChart;
+//    LineDataSet lineDataSet;
+//    LineData lineData;
+//
+//    private void displayGraph() {
+//        lineChart = findViewById(R.id.linechart);
+//        getDataAndUpdateChart();
+//
+//        XAxis xAxis = lineChart.getXAxis();
+//        xAxis.setValueFormatter(new IndexAxisValueFormatter(Arrays.asList("SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT")));
+//        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+//        xAxis.setGranularity(1f);
+//        xAxis.setCenterAxisLabels(false);
+//        xAxis.setGranularityEnabled(true);
+//
+//        lineChart.getDescription().setEnabled(true);
+//    }
+//
+//    private void getDataAndUpdateChart() {
+//        dbFinsec.child("users").child(email3).addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                HashMap<String, Float> expenseData = new HashMap<>();
+//                String lastDate = "";
+//                for (DataSnapshot dateSnapshot : snapshot.getChildren()) {
+//                    String dateString = dateSnapshot.getKey();
+//
+//                    if (isValidDate(dateString)) {
+//                        if (!lastDate.equals("")) {
+//                            int weekOfYear = getWeekOfYear(dateString);
+//                            int lastWeekOfYear = getWeekOfYear(lastDate);
+//                            if (weekOfYear != lastWeekOfYear) {
+//                                // A new week has started
+//                                expenseData.clear();
+//                                lineEntries.clear();
+//                                if (lineDataSet != null) {
+//                                    lineDataSet.clear();
+//                                }
+//                            }
+//                        }
+//                        lastDate = dateString;
+//
+//                        String dayOfWeek = getDayOfWeek(dateString);
+//                        float totalExpense = 0f;
+//
+//                        for (DataSnapshot expensesSnapshot : dateSnapshot.getChildren()) {
+//                            if(expensesSnapshot.getKey().equals("Expenses")) {
+//                                for (DataSnapshot expenseNameSnapshot : expensesSnapshot.getChildren()) {
+//                                    String expenseValue = expenseNameSnapshot.child("expense").getValue(String.class);
+//                                    totalExpense += Float.parseFloat(expenseValue);
+//                                }
+//                            }
+//                        }
+//                        expenseData.put(dayOfWeek, totalExpense);
+//                    }
+//                }
+//
+//                lineEntries = new ArrayList<>();
+//                int index = 0;
+//                for (String dayOfWeek : Arrays.asList("SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT")) {
+//                    Float totalExpense = expenseData.getOrDefault(dayOfWeek, 0f);
+//                    lineEntries.add(new Entry(index++, totalExpense));
+//                }
+//
+//                lineDataSet = new LineDataSet(lineEntries, "Finsec.");
+//                lineData = new LineData(lineDataSet);
+//                lineChart.setData(lineData);
+//
+//                lineDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+//                lineDataSet.setValueTextColor(Color.BLACK);
+//                lineDataSet.setValueTextSize(16f);
+//
+//                lineChart.notifyDataSetChanged();
+//                lineChart.invalidate();
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//                // Error handling
+//            }
+//        });
+//    }
+//
+//    private boolean isValidDate(String dateString){
+//        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
+//        sdf.setLenient(false);
+//        try{
+//            sdf.parse(dateString);
+//            return true;
+//        } catch(ParseException e){
+//            return false;
+//        }
+//    }
+//
+//    private String getDayOfWeek(String dateString){
+//        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
+//        try{
+//            Date date = sdf.parse(dateString);
+//            SimpleDateFormat simpleDateformat = new SimpleDateFormat("EEE"); // the day of the week abbreviated
+//            return simpleDateformat.format(date).toUpperCase();
+//        } catch(ParseException e){
+//            return "";
+//        }
+//    }
+//
+//    private int getWeekOfYear(String dateString){
+//        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
+//        try{
+//            Date date = sdf.parse(dateString);
+//            Calendar calendar = Calendar.getInstance();
+//            calendar.setTime(date);
+//            return calendar.get(Calendar.WEEK_OF_YEAR);
+//        } catch(ParseException e){
+//            return -1;
+//        }
+//    }
 
     private void updateMonthBasedOnCurrentDate() {
 

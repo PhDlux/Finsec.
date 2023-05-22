@@ -52,7 +52,7 @@ public class HomePage extends AppCompatActivity {
         final ImageView imgSched = findViewById(R.id.icSchedule);
         final ImageView imgCalcu = findViewById(R.id.icCalculator);
         final ImageView imgAdvisor = findViewById(R.id.icAdvisor);
-
+//
         final TextView txtHome = findViewById(R.id.txtHome);
         final TextView txtSched = findViewById(R.id.txtSchedule);
         final TextView txtCalcu = findViewById(R.id.txtCalculator);
@@ -60,6 +60,7 @@ public class HomePage extends AppCompatActivity {
 
         String em = getIntent().getStringExtra("email");
         HomepageFragment hp = HomepageFragment.newInstance(em);
+        SchedulepageFragment sp = SchedulepageFragment.newInstance(em);
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.add(R.id.fragmentContainer, hp);
@@ -71,7 +72,7 @@ public class HomePage extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(selectedTab != 1) {
-                    switchFragment(1, HomepageFragment.class);
+                    switchFragment(1, hp.getClass(), em);
 
                     txtSched.setVisibility(View.GONE);
                     txtCalcu.setVisibility(View.GONE);
@@ -103,8 +104,7 @@ public class HomePage extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(selectedTab != 2) {
-                    switchFragment(2, SchedulepageFragment.class);
-
+                    switchFragment(2, sp.getClass(), em);
                     txtHome.setVisibility(View.GONE);
                     txtCalcu.setVisibility(View.GONE);
                     txtAdvisor.setVisibility(View.GONE);
@@ -135,7 +135,8 @@ public class HomePage extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(selectedTab != 3) {
-                    switchFragment(3, CalculatorpageFragment.class);
+
+                    switchFragment(3, CalculatorpageFragment.class, em);
 
                     txtHome.setVisibility(View.GONE);
                     txtSched.setVisibility(View.GONE);
@@ -167,7 +168,7 @@ public class HomePage extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(selectedTab != 4) {
-                    switchFragment(4, AdvisorpageFragment.class);
+                    switchFragment(4, AdvisorpageFragment.class, em);
 
                     txtHome.setVisibility(View.GONE);
                     txtSched.setVisibility(View.GONE);
@@ -196,7 +197,7 @@ public class HomePage extends AppCompatActivity {
         });
     }
 
-    private void switchFragment(int tab, Class<? extends Fragment> fragmentClass) {
+    private void switchFragment(int tab, Class<? extends Fragment> fragmentClass, String email) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 
         Fragment currentFragment = fragmentMap.get(selectedTab);
@@ -207,7 +208,13 @@ public class HomePage extends AppCompatActivity {
         Fragment newFragment = fragmentMap.get(tab);
         if(newFragment == null) {
             try {
-                newFragment = fragmentClass.newInstance();
+                if (fragmentClass == HomepageFragment.class) {
+                    newFragment = HomepageFragment.newInstance(email);
+                } else if (fragmentClass == SchedulepageFragment.class) {
+                    newFragment = SchedulepageFragment.newInstance(email);
+                } else {
+                    newFragment = fragmentClass.newInstance();
+                }
                 fragmentMap.put(tab, newFragment);
                 ft.add(R.id.fragmentContainer, newFragment);
             } catch (InstantiationException | IllegalAccessException e) {

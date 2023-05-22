@@ -236,12 +236,12 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.144" />
-        <View
-            android:id="@+id/overlay"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/semi_transparent"
-            android:visibility="gone" />
+                <View
+                    android:id="@+id/overlay"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/semi_transparent"
+                    android:visibility="gone" />
 
                 <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
                     android:id="@+id/add_fab"
@@ -262,7 +262,8 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/schedBudget_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -1,17 +1,25 @@
 package com.example.finsec_finalfinalnajud;
 
+import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
+
 import android.app.Dialog;
-import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.CalendarView;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -24,7 +32,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.text.NumberFormat;
 import android.content.Context;
 
 /**
@@ -32,34 +39,12 @@ import android.content.Context;
  * Use the {@link SchedulepageFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SchedulepageFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public SchedulepageFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment schedulepage.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static SchedulepageFragment newInstance(String param1, String param2) {
+public class SchedulepageFragment extends Fragment implements View.OnClickListener, CalendarView.OnDateChangeListener {
+    public static SchedulepageFragment newInstance(String em) {
+        Log.d(TAG, "newInstance called with: " + em);
         SchedulepageFragment fragment = new SchedulepageFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString("encodedEmail", em);
         fragment.setArguments(args);
         return fragment;
     }
@@ -67,9 +52,15 @@ public class SchedulepageFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            String encodedEmail = arguments.getString("encodedEmail");
+            Log.d(TAG, "onCreate: encodedEmail: " + encodedEmail);
+            if (encodedEmail != null) {
+                email = encodedEmail;
+            }
+        } else {
+            Log.d(TAG, "onCreate: getArguments is null");
         }
     }
 
@@ -77,23 +68,47 @@ public class SchedulepageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.schedulepage, container, false);
+        View view = inflater.inflate(R.layout.schedulepage, container, false);
+
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            String encodedEmail = arguments.getString("encodedEmail");
+            if (encodedEmail != null) {
+                email = encodedEmail;
+            }
+        }
+        return view;
     }
 
     AlertDialog addNewBudget;
     DatabaseReference dbFinsec = FirebaseDatabase.getInstance().getReferenceFromUrl("https://finsec-14c51-default-rtdb.firebaseio.com/");
-    String email, date;
+    String email, date, timeStamp;
     FloatingActionButton addBudgetFab, addExpenseFab, addBillsFab;
     ExtendedFloatingActionButton addActionsFab;
     TextView txtBudgetFab, txtExpenseFab, txtBillsFab;
     Button bottomsheet1, bottomsheet2, bottomsheet3;
     View overlay;
     boolean isAllFABVisible;
-
+    LinearLayout botnav;
+    private Animation rotateOpenAnim;
+    private Animation rotateCloseAnim;
+    private ImageView fabIcon;
+    CalendarView calendarView;
+    private long lastClickTime = 0;
+    private static final long DOUBLE_CLICK_TIME_DELTA = 300;
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            String encodedEmail = arguments.getString("encodedEmail");
+            if (encodedEmail != null) {
+                email = encodedEmail;
+            }
+        }
 
+
+        System.out.println(email);
         addBudgetFab = view.findViewById(R.id.schedBudget_fab);
         addExpenseFab = view.findViewById(R.id.schedExpense_fab);
         addBillsFab = view.findViewById(R.id.schedBills_fab);
@@ -102,6 +117,8 @@ public class SchedulepageFragment extends Fragment {
         txtBudgetFab = view.findViewById(R.id.txtFABbudget);
         txtExpenseFab = view.findViewById(R.id.txtFABexpense);
         txtBillsFab = view.findViewById(R.id.txtFABbills);
+
+        calendarView = view.findViewById(R.id.calendarView);
 
         addBudgetFab.setVisibility(View.GONE);
         addExpenseFab.setVisibility(View.GONE);
@@ -113,34 +130,36 @@ public class SchedulepageFragment extends Fragment {
         overlay = view.findViewById(R.id.overlay);
         isAllFABVisible = false;
 
+        rotateOpenAnim = AnimationUtils.loadAnimation(getContext(), R.anim.rotate_open_anim);
+        rotateCloseAnim = AnimationUtils.loadAnimation(getContext(), R.anim.rotate_close_anim);
         addActionsFab.shrink();
         FloatingActionButton bottomsheet1 = view.findViewById(R.id.schedBudget_fab);
         FloatingActionButton bottomsheet2 = view.findViewById(R.id.schedExpense_fab);
         FloatingActionButton bottomsheet3 = view.findViewById(R.id.schedBills_fab);
 
-        bottomsheet1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDialog(R.layout.budgetschedule_bottomsheet);
-            }
-        });
+        bottomsheet1.setOnClickListener(this);
+        bottomsheet2.setOnClickListener(this);
+        bottomsheet3.setOnClickListener(this);
 
-        bottomsheet2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDialog(R.layout.expenseschedule_bottomsheet);
-            }
-        });
+        addActionsFab.setOnClickListener(this);
+        overlay.setOnClickListener(this);
 
-        bottomsheet3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDialog(R.layout.billsschedule_bottomsheet);
-            }
-        });
-        addActionsFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        calendarView.setOnDateChangeListener(this);
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.schedBudget_fab:
+                showBudgetScheduleDialog();
+                break;
+            case R.id.schedExpense_fab:
+                showExpenseScheduleDialog();
+                break;
+            case R.id.schedBills_fab:
+                showBillsScheduleDialog();
+                break;
+            case R.id.add_fab:
                 if (!isAllFABVisible) {
                     overlay.setVisibility(View.VISIBLE);
 
@@ -154,6 +173,7 @@ public class SchedulepageFragment extends Fragment {
                     addActionsFab.extend();
 
                     isAllFABVisible = true;
+
                 } else {
                     overlay.setVisibility(View.GONE);
 
@@ -167,69 +187,221 @@ public class SchedulepageFragment extends Fragment {
                     addActionsFab.shrink();
 
                     isAllFABVisible = false;
+
                 }
-            }
-        });
+                break;
+            case R.id.overlay:
+                overlay.setVisibility(View.GONE);
 
+                addBudgetFab.hide();
+                addExpenseFab.hide();
+                addBillsFab.hide();
+                txtBudgetFab.setVisibility(View.GONE);
+                txtExpenseFab.setVisibility(View.GONE);
+                txtBillsFab.setVisibility(View.GONE);
 
+                addActionsFab.shrink();
+                isAllFABVisible = false;
+                break;
+        }
     }
 
-    private void buildAllocateBudgetDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        View view = getLayoutInflater().inflate(R.layout.allocate_budget, null);
-
-        EditText etBudgetName = view.findViewById(R.id.etAllocateBudget);
-        EditText etBudget = view.findViewById(R.id.etBudget);
-
-        builder.setView(view);
-        builder.setTitle("Allocate Budget")
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                        NumberFormat n = NumberFormat.getInstance();
-                        n.setMaximumFractionDigits(2);
-                        n.setMinimumFractionDigits(2);
-
-                        String budgetName = etBudgetName.getText().toString();
-                        double budgetValue = Double.parseDouble(etBudget.getText().toString());
-
-
-//                        goal = String.valueOf((int)goalValue);
-//                        dbFinsec.child("users").child(email3).child("goal").setValue(goal);
-//
-//                        setTxtGoal();
-//                        dbFinsec.child("users").child(email3).child("date").child("Budget").child(budgetName).setValue(formattedBudgetValue);
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                    }
-                });
-        addNewBudget = builder.create();
+    @Override
+    public void onSelectedDayChange(@NonNull CalendarView calendarView, int i, int i1, int i2) {
+        long clickTime = System.currentTimeMillis();
+        if (clickTime - lastClickTime < DOUBLE_CLICK_TIME_DELTA) {
+            // Perform action on double click
+            // Your code here
+            showScheduleForDate();
+        }
+        lastClickTime = clickTime;
+        date =  String.format("%02d", i1+1) + "-" + String.format("%02d", i2) + "-" + Integer.toString(i);
     }
 
-    private void addView() {
-        View view = getLayoutInflater().inflate(R.layout.budget_frame, null);
-
-        TextView budgetName = view.findViewById(R.id.txtBudgetName);
-        TextView budget = view.findViewById(R.id.txtBudget);
-
-
-    }
-
-    private void showDialog(int layoutResId) {
-        // Use the appropriate method to obtain the context, depending on whether you are in an Activity or Fragment
-        Context context = getContext(); // For a Fragment
-        // or
-        // Context context = this; // For an Activity
+    private void showScheduleForDate() {
+        if (email == null) {
+            Log.e(TAG, "email3 is null");
+            return;
+        }
+        Context context = getContext(); // or `this` for an Activity
 
         Dialog dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(layoutResId);
 
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.scheduledisplay_dialog, null);
+        dialog.setContentView(view);
+
+        ImageView imgBack = view.findViewById(R.id.imgBack);
+        Button btnSchedBudget = view.findViewById(R.id.btnSchedBudget);
+        Button btnSchedBills = view.findViewById(R.id.btnSchedBills);
+        Button btnSchedExpenses = view.findViewById(R.id.btnSchedExpenses);
+
+        btnSchedBudget.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getContext(), DisplaySchedule.class);
+                i.putExtra("schedType", "Budget");
+                i.putExtra("email", email);
+                i.putExtra("date", date);
+                startActivity(i);
+            }
+        });
+
+        btnSchedBills.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getContext(), DisplaySchedule.class);
+                i.putExtra("schedType", "Bills");
+                i.putExtra("email", email);
+                i.putExtra("date", date);
+                startActivity(i);
+            }
+        });
+
+        btnSchedExpenses.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getContext(), DisplaySchedule.class);
+                i.putExtra("schedType", "Expenses");
+                i.putExtra("email", email);
+                i.putExtra("date", date);
+                startActivity(i);
+            }
+        });
+        imgBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        commonDialogConfig(dialog);
+    }
+
+    private void showBudgetScheduleDialog() {
+        if (email == null) {
+            Log.e(TAG, "email3 is null");
+            return;
+        }
+        System.out.println(email);
+        Context context = getContext(); // or `this` for an Activity
+
+        Dialog dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.budgetschedule_bottomsheet, null);
+        dialog.setContentView(view);
+
+        EditText etBudgetName = view.findViewById(R.id.layoutBudgetName);
+        EditText etAmount = view.findViewById(R.id.layoutAmount);
+        EditText etDate = view.findViewById(R.id.layoutDate);
+        EditText etDescription = view.findViewById(R.id.layoutDescription);
+        Button btnSchedule = view.findViewById(R.id.btnschedule);
+
+        etDate.setText(date);
+        commonDialogConfig(dialog);
+
+        btnSchedule.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                timeStamp = String.valueOf(System.currentTimeMillis());
+
+                // get data from inputs
+                dbFinsec.child("users").child(email).child("Schedule").child("Budget").child(date).child(timeStamp).child("sbudget").setValue(etBudgetName.getText().toString());
+                dbFinsec.child("users").child(email).child("Schedule").child("Budget").child(date).child(timeStamp).child("samount").setValue(etAmount.getText().toString());
+                dbFinsec.child("users").child(email).child("Schedule").child("Budget").child(date).child(timeStamp).child("sdate").setValue(etDate.getText().toString());
+                dbFinsec.child("users").child(email).child("Schedule").child("Budget").child(date).child(timeStamp).child("sdescription").setValue(etDescription.getText().toString());
+                dialog.dismiss();
+            }
+        });
+
+    }
+
+    private void showExpenseScheduleDialog() {
+        if (email == null) {
+            Log.e(TAG, "email3 is null");
+            return;
+        }
+        System.out.println(email);
+        Context context = getContext(); // or `this` for an Activity
+
+        Dialog dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.expenseschedule_bottomsheet, null);
+        dialog.setContentView(view);
+
+        EditText etExpenseName = view.findViewById(R.id.layoutExpenseName);
+        EditText etAmount = view.findViewById(R.id.layoutAmount);
+        EditText etDate = view.findViewById(R.id.layoutDate);
+        EditText etDescription = view.findViewById(R.id.layoutDescription);
+        Button btnSchedule = view.findViewById(R.id.btnschedule);
+
+        etDate.setText(date);
+        commonDialogConfig(dialog);
+        btnSchedule.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                timeStamp = String.valueOf(System.currentTimeMillis());
+
+                // get data from inputs
+                dbFinsec.child("users").child(email).child("Schedule").child("Expenses").child(date).child(timeStamp).child("sbudget").setValue(etExpenseName.getText().toString());
+                dbFinsec.child("users").child(email).child("Schedule").child("Expenses").child(date).child(timeStamp).child("samount").setValue(etAmount.getText().toString());
+                dbFinsec.child("users").child(email).child("Schedule").child("Expenses").child(date).child(timeStamp).child("sdate").setValue(etDate.getText().toString());
+                dbFinsec.child("users").child(email).child("Schedule").child("Expenses").child(date).child(timeStamp).child("sdescription").setValue(etDescription.getText().toString());
+                dialog.dismiss();
+            }
+        });
+
+    }
+
+    private void showBillsScheduleDialog() {
+        if (email == null) {
+            Log.e(TAG, "email3 is null");
+            return;
+        }
+        System.out.println(email);
+        Context context = getContext(); // or `this` for an Activity
+
+        Dialog dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.billsschedule_bottomsheet, null);
+        dialog.setContentView(view);
+
+        EditText etBillsName = view.findViewById(R.id.layoutBillsName);
+        EditText etAmount = view.findViewById(R.id.layoutAmount);
+        EditText etDate = view.findViewById(R.id.layoutDate);
+        EditText etDescription = view.findViewById(R.id.layoutDescription);
+        Button btnSchedule = view.findViewById(R.id.btnschedule);
+
+        etDate.setText(date);
+        commonDialogConfig(dialog);
+
+        btnSchedule.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                timeStamp = String.valueOf(System.currentTimeMillis());
+
+                dbFinsec.child("users").child(email).child("Schedule").child("Bills").child(date).child(timeStamp).child("sbudget").setValue(etBillsName.getText().toString());
+                dbFinsec.child("users").child(email).child("Schedule").child("Bills").child(date).child(timeStamp).child("samount").setValue(etAmount.getText().toString());
+                dbFinsec.child("users").child(email).child("Schedule").child("Bills").child(date).child(timeStamp).child("sdate").setValue(etDate.getText().toString());
+                dbFinsec.child("users").child(email).child("Schedule").child("Bills").child(date).child(timeStamp).child("sdescription").setValue(etDescription.getText().toString());
+                dialog.dismiss();
+            }
+        });
+    }
+
+    private void commonDialogConfig(Dialog dialog){
+        if (email == null) {
+            Log.e(TAG, "email3 is null");
+            return;
+        }
+        System.out.println(email);
         dialog.show();
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));

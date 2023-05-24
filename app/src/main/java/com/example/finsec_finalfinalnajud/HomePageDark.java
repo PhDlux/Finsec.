@@ -59,9 +59,11 @@ public class HomePageDark extends AppCompatActivity {
         final TextView txtAdvisor = findViewById(R.id.txtAdvisor);
 
         String em = getIntent().getStringExtra("email");
+        System.out.println(em);
         HomepageFragmentDark hp = HomepageFragmentDark.newInstance(em);
+        SchedulepageFragmentDark sp = SchedulepageFragmentDark.newInstance(em);
 
-
+        System.out.println(em);
         switchFragment(1, hp.getClass(), em);
 
         fragmentMap.put(1, hp);
@@ -102,7 +104,7 @@ public class HomePageDark extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(selectedTab != 2) {
-                    switchFragment(2, SchedulepageFragmentDark.class, em);
+                    switchFragment(2, sp.getClass(), em);
                     txtHome.setVisibility(View.GONE);
                     txtCalcu.setVisibility(View.GONE);
                     txtAdvisor.setVisibility(View.GONE);
@@ -208,8 +210,8 @@ public class HomePageDark extends AppCompatActivity {
             try {
                 if (fragmentClass == HomepageFragmentDark.class) {
                     newFragment = HomepageFragmentDark.newInstance(email);
-                } else if (fragmentClass == SchedulepageFragment.class) {
-                    newFragment = SchedulepageFragment.newInstance(email);
+                } else if (fragmentClass == SchedulepageFragmentDark.class) {
+                    newFragment = SchedulepageFragmentDark.newInstance(email);
                 } else {
                     newFragment = fragmentClass.newInstance();
                 }

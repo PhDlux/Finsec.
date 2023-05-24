@@ -471,14 +471,14 @@ public class SchedulepageFragmentDark extends Fragment implements View.OnClickLi
             return;
         }
 
-        DatabaseReference userRef = dbFinsec.child("users").child(email).child(date);
+        DatabaseReference userRef = dbFinsec.child("users").child(email).child("Schedule").child("Expenses").child(date);
         userRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 double totalExpenses = 0;
-                for (DataSnapshot expenseSnapshot : snapshot.child("Expenses").getChildren()) {
-                    if (expenseSnapshot.child("expense").getValue() != null) {
-                        String expenseStr = expenseSnapshot.child("expense").getValue(String.class);
+                for (DataSnapshot expenseSnapshot : snapshot.getChildren()) {
+                    if (expenseSnapshot.child("samount").getValue() != null) {
+                        String expenseStr = expenseSnapshot.child("samount").getValue(String.class);
 
                         double expense = 0;
                         try {

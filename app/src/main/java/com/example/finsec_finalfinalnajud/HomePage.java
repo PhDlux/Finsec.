@@ -59,8 +59,8 @@ public class HomePage extends AppCompatActivity {
         final TextView txtAdvisor = findViewById(R.id.txtAdvisor);
 
         String em = getIntent().getStringExtra("email");
+        System.out.println(em + em + em);
         HomepageFragment hp = HomepageFragment.newInstance(em);
-
 
         switchFragment(1, hp.getClass(), em);
 

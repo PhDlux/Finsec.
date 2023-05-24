@@ -64,6 +64,7 @@ public class SignInDark extends AppCompatActivity {
                             if(getPassword.equals(password)) {
                                 Toast.makeText(SignInDark.this, "Logged in Succesfully", Toast.LENGTH_SHORT).show();
                                 Intent i = new Intent(SignInDark.this, HomePageDark.class);
+                                System.out.println(encodedEmail);
                                 i.putExtra("email", encodedEmail);
                                 startActivity(i);
                             } else {

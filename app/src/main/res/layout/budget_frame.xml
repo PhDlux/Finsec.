@@ -8,12 +8,12 @@
     android:backgroundTint="#00FFFFFF">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/imageView6"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:padding="10dp"
             app:layout_constraintBottom_toBottomOf="parent"

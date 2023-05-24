@@ -60,11 +60,9 @@ public class HomePage extends AppCompatActivity {
 
         String em = getIntent().getStringExtra("email");
         HomepageFragment hp = HomepageFragment.newInstance(em);
-        SchedulepageFragment sp = SchedulepageFragment.newInstance(em);
 
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.add(R.id.fragmentContainer, hp);
-        ft.commit();
+
+        switchFragment(1, hp.getClass(), em);
 
         fragmentMap.put(1, hp);
 
@@ -104,7 +102,7 @@ public class HomePage extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(selectedTab != 2) {
-                    switchFragment(2, sp.getClass(), em);
+                    switchFragment(2, SchedulepageFragment.class, em);
                     txtHome.setVisibility(View.GONE);
                     txtCalcu.setVisibility(View.GONE);
                     txtAdvisor.setVisibility(View.GONE);

@@ -131,22 +131,21 @@
             app:layout_constraintTop_toBottomOf="@+id/calendarView"
             app:layout_constraintVertical_bias="0.007" />
 
-        <TextView
-            android:id="@+id/txtexpenses1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="36dp"
-            android:fontFamily="@font/nunitobold"
-            android:text="Expenses"
-            android:textColor="#D62279"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/imgbtnexpenses2"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/txtexpensesnum1"
-            app:layout_constraintTop_toBottomOf="@+id/calendarView"
-            app:layout_constraintVertical_bias="0.014" />
+                <TextView
+                    android:id="@+id/txtexpenses1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nunitobold"
+                    android:text="Expenses"
+                    android:textColor="#D62279"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/imgbtnexpenses2"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="@+id/txtexpensesnum1"
+                    app:layout_constraintTop_toTopOf="@+id/txtexpensesarrow1"
+                    app:layout_constraintVertical_bias="0.0" />
 
-        <TextView
+                <TextView
             android:id="@+id/txtexpensesnum1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -162,21 +161,22 @@
             app:layout_constraintTop_toBottomOf="@+id/calendarView"
             app:layout_constraintVertical_bias="0.015" />
 
-        <TextView
-            android:id="@+id/txtexpensesarrow1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:rotationX="-184"
-            android:scaleX="-1"
-            android:text="⬆"
-            android:textColor="#D62279"
-            android:textSize="40sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/txtexpenses1"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="@+id/imgbtnexpenses2"
-            app:layout_constraintTop_toTopOf="@+id/imgbtnexpenses2"
-            app:layout_constraintVertical_bias="0.028" />
+                <TextView
+                    android:id="@+id/txtexpensesarrow1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:rotationX="-184"
+                    android:scaleX="-1"
+                    android:text="⬆"
+                    android:textColor="#D62279"
+                    android:textSize="40sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/txtexpenses1"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toStartOf="@+id/imgbtnexpenses2"
+                    app:layout_constraintTop_toTopOf="@+id/imgbtnexpenses2"
+                    app:layout_constraintVertical_bias="0.028" />
 
         <TextView
             android:id="@+id/txtbudgetnum"

@@ -45,7 +45,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linechart"
         app:layout_constraintVertical_bias="1.0"
-        app:srcCompat="@drawable/expenseframedark" />
+        app:srcCompat="@drawable/expensenewbgdark" />
 
     <TextView
         android:id="@+id/textView"

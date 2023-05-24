@@ -43,7 +43,7 @@ public class FrontPage extends AppCompatActivity implements View.OnClickListener
         switchDarkMode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
+                if (!isChecked) {
                     // Switch is toggled on, start activity to display front_page_dark.xml
                     Intent intent = new Intent(FrontPage.this, FrontPageDark.class);
                     startActivity(intent);

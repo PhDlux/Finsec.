@@ -76,17 +76,17 @@ public class HomePage extends AppCompatActivity {
                     txtCalcu.setVisibility(View.GONE);
                     txtAdvisor.setVisibility(View.GONE);
 
-                    imgSched.setImageResource(R.drawable.ic_schedule);
-                    imgCalcu.setImageResource(R.drawable.ic_calculator);
-                    imgAdvisor.setImageResource(R.drawable.ic_financialadvisor);
+                    imgSched.setImageResource(R.drawable.ic_schedule_selected);
+                    imgCalcu.setImageResource(R.drawable.ic_calculator_selected);
+                    imgAdvisor.setImageResource(R.drawable.ic_financialadvisor_selected);
 
                     schedule.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),android.R.color.transparent));
                     calcu.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),android.R.color.transparent));
                     advisor.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),android.R.color.transparent));
 
                     txtHome.setVisibility(View.VISIBLE);
-                    imgHome.setImageResource(R.drawable.ic_home_selected);
-                    home.setBackgroundResource(R.drawable.tab_bg);
+                    imgHome.setImageResource(R.drawable.ic_home);
+                    home.setBackgroundResource(R.drawable.tab_bg_dark);
 
                     ScaleAnimation scaleAnimation = new ScaleAnimation(0.8f, 1.0f, 1f, 1f, Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f);
                     scaleAnimation.setDuration(200);
@@ -107,17 +107,17 @@ public class HomePage extends AppCompatActivity {
                     txtCalcu.setVisibility(View.GONE);
                     txtAdvisor.setVisibility(View.GONE);
 
-                    imgHome.setImageResource(R.drawable.ic_home);
-                    imgCalcu.setImageResource(R.drawable.ic_calculator);
-                    imgAdvisor.setImageResource(R.drawable.ic_financialadvisor);
+                    imgHome.setImageResource(R.drawable.ic_home_selected);
+                    imgCalcu.setImageResource(R.drawable.ic_calculator_selected);
+                    imgAdvisor.setImageResource(R.drawable.ic_financialadvisor_selected);
 
                     home.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),android.R.color.transparent));
                     calcu.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),android.R.color.transparent));
                     advisor.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),android.R.color.transparent));
 
                     txtSched.setVisibility(View.VISIBLE);
-                    imgSched.setImageResource(R.drawable.ic_schedule_selected);
-                    schedule.setBackgroundResource(R.drawable.tab_bg);
+                    imgSched.setImageResource(R.drawable.ic_schedule);
+                    schedule.setBackgroundResource(R.drawable.tab_bg_dark);
 
                     ScaleAnimation scaleAnimation = new ScaleAnimation(0.8f, 1.0f, 1f, 1f, Animation.RELATIVE_TO_SELF, 1.0f, Animation.RELATIVE_TO_SELF, 0.0f);
                     scaleAnimation.setDuration(200);
@@ -140,17 +140,17 @@ public class HomePage extends AppCompatActivity {
                     txtSched.setVisibility(View.GONE);
                     txtAdvisor.setVisibility(View.GONE);
 
-                    imgHome.setImageResource(R.drawable.ic_home);
-                    imgSched.setImageResource(R.drawable.ic_schedule);
-                    imgAdvisor.setImageResource(R.drawable.ic_financialadvisor);
+                    imgHome.setImageResource(R.drawable.ic_home_selected);
+                    imgSched.setImageResource(R.drawable.ic_schedule_selected);
+                    imgAdvisor.setImageResource(R.drawable.ic_financialadvisor_selected);
 
                     home.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),android.R.color.transparent));
                     schedule.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),android.R.color.transparent));
                     advisor.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),android.R.color.transparent));
 
                     txtCalcu.setVisibility(View.VISIBLE);
-                    imgCalcu.setImageResource(R.drawable.ic_calculator_selected);
-                    calcu.setBackgroundResource(R.drawable.tab_bg);
+                    imgCalcu.setImageResource(R.drawable.ic_calculator);
+                    calcu.setBackgroundResource(R.drawable.tab_bg_dark);
 
                     ScaleAnimation scaleAnimation = new ScaleAnimation(0.8f, 1.0f, 1f, 1f, Animation.RELATIVE_TO_SELF, 1.0f, Animation.RELATIVE_TO_SELF, 0.0f);
                     scaleAnimation.setDuration(200);
@@ -172,17 +172,17 @@ public class HomePage extends AppCompatActivity {
                     txtSched.setVisibility(View.GONE);
                     txtCalcu.setVisibility(View.GONE);
 
-                    imgHome.setImageResource(R.drawable.ic_home);
-                    imgSched.setImageResource(R.drawable.ic_schedule);
-                    imgCalcu.setImageResource(R.drawable.ic_calculator);
+                    imgHome.setImageResource(R.drawable.ic_home_selected);
+                    imgSched.setImageResource(R.drawable.ic_schedule_selected);
+                    imgCalcu.setImageResource(R.drawable.ic_calculator_selected);
 
                     home.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),android.R.color.transparent));
                     schedule.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),android.R.color.transparent));
                     calcu.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),android.R.color.transparent));
 
                     txtAdvisor.setVisibility(View.VISIBLE);
-                    imgAdvisor.setImageResource(R.drawable.ic_financialadvisor_selected);
-                    advisor.setBackgroundResource(R.drawable.tab_bg);
+                    imgAdvisor.setImageResource(R.drawable.ic_financialadvisor);
+                    advisor.setBackgroundResource(R.drawable.tab_bg_dark);
 
                     ScaleAnimation scaleAnimation = new ScaleAnimation(0.8f, 1.0f, 1f, 1f, Animation.RELATIVE_TO_SELF, 1.0f, Animation.RELATIVE_TO_SELF, 0.0f);
                     scaleAnimation.setDuration(200);

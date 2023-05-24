@@ -11,14 +11,14 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 
-public class FrontPage extends AppCompatActivity implements View.OnClickListener {
+public class FrontPageDark extends AppCompatActivity implements View.OnClickListener {
 
     Button fSignIn;
     Button fSignUp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.front_page);
+        setContentView(R.layout.front_page_dark);
 
         int backgroundColor = Color.parseColor("#F1F1F1");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -39,13 +39,13 @@ public class FrontPage extends AppCompatActivity implements View.OnClickListener
         fSignIn.setOnClickListener(this);
         fSignUp.setOnClickListener(this);
 
-        Switch switchDarkMode = findViewById(R.id.switchDarkMode);
-        switchDarkMode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        Switch switchLightMode = findViewById(R.id.switchLightMode);
+        switchLightMode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    // Switch is toggled on, start activity to display front_page_dark.xml
-                    Intent intent = new Intent(FrontPage.this, FrontPageDark.class);
+                    // Switch is toggled on, start activity to display front_page.xml
+                    Intent intent = new Intent(FrontPageDark.this, FrontPage.class);
                     startActivity(intent);
                 } else {
                     // Switch is toggled off, no action needed
@@ -60,11 +60,11 @@ public class FrontPage extends AppCompatActivity implements View.OnClickListener
         Intent i;
         switch(view.getId()) {
             case R.id.btnSignIn:
-                i = new Intent(FrontPage.this, SignIn.class);
+                i = new Intent(FrontPageDark.this, SignInDark.class);
                 startActivity(i);
                 break;
             case R.id.btnSignUp:
-                i = new Intent(FrontPage.this, SignUp.class);
+                i = new Intent(FrontPageDark.this, SignUpDark.class);
                 startActivity(i);
                 break;
         }

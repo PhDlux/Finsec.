@@ -20,14 +20,15 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/whiteframe2" />
+            app:srcCompat="@drawable/notifframe" />
 
         <TextView
             android:id="@+id/txtBudgetName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="TextView"
             android:fontFamily="@font/nunitobold"
+            android:text="TextView"
+            android:textColor="#FFFFFF"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/txtBudget"
             app:layout_constraintHorizontal_bias="0.254"
@@ -38,8 +39,9 @@
             android:id="@+id/txtBudget"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="TextView"
             android:fontFamily="@font/nunitobold"
+            android:text="TextView"
+            android:textColor="#FFFFFF"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/imageView6"
             app:layout_constraintHorizontal_bias="0.866"

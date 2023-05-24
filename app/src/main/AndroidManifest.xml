@@ -17,34 +17,67 @@
             android:name=".DisplaySchedule"
             android:exported="false" />
         <activity
+            android:name=".DisplayScheduleDark"
+            android:exported="false" />
+        <activity
             android:name=".ScheduleDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ScheduleDetailActivityDark"
             android:exported="false" />
         <activity
             android:name=".ScheduleListActivity"
             android:exported="false" />
         <activity
+            android:name=".ScheduleListActivityDark"
+            android:exported="false" />
+        <activity
             android:name=".NotificationSystem"
+            android:exported="false" />
+        <activity
+            android:name=".NotificationSystemDark"
             android:exported="false" />
         <activity
             android:name=".ExpensePage"
             android:exported="false" />
         <activity
+            android:name=".ExpensePageDark"
+            android:exported="false" />
+        <activity
             android:name=".AnotherCustomDialog"
+            android:exported="false" />
+        <activity
+            android:name=".AnotherCustomDialogDark"
             android:exported="false" />
         <activity
             android:name=".GoalSavings"
             android:exported="false" />
         <activity
+            android:name=".GoalSavingsDark"
+            android:exported="false" />
+        <activity
             android:name=".HomePage"
+            android:exported="false" />
+        <activity
+            android:name=".HomePageDark"
             android:exported="false" />
         <activity
             android:name=".SignUp"
             android:exported="false" />
         <activity
+            android:name=".SignUpDark"
+            android:exported="false" />
+        <activity
             android:name=".SignIn"
             android:exported="false" />
         <activity
+            android:name=".SignInDark"
+            android:exported="false" />
+        <activity
             android:name=".FrontPage"
+            android:exported="true"/>
+        <activity
+            android:name=".FrontPageDark"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

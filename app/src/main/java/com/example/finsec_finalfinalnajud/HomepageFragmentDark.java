@@ -126,7 +126,7 @@ public class HomepageFragmentDark extends Fragment {
             @Override
             public void onClick(View view) {
                 if(getArguments() != null){
-                    Intent i = new Intent(getActivity(), GoalSavings.class);
+                    Intent i = new Intent(getActivity(), GoalSavingsDark.class);
                     i.putExtra("email2", getArguments().getString("encodedEmail"));
                     i.putExtra("currentDate", dateTextView.getText().toString().substring(6));
                     startActivity(i);
@@ -138,7 +138,7 @@ public class HomepageFragmentDark extends Fragment {
             @Override
             public void onClick(View view) {
                 if(getArguments() != null){
-                    Intent i = new Intent(getActivity(), ExpensePage.class);
+                    Intent i = new Intent(getActivity(), ExpensePageDark.class);
                     i.putExtra("email2", getArguments().getString("encodedEmail"));
                     i.putExtra("currentDate", dateTextView.getText().toString().substring(6));
                     startActivity(i);

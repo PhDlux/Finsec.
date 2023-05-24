@@ -8,19 +8,17 @@
     android:background="@drawable/bgfrontpagedark"
     tools:context=".FrontPageDark">
 
+
     <Switch
         android:id="@+id/switchLightMode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="171dp"
-        android:layout_marginEnd="52dp"
-        android:checked="false"
-        app:layout_constraintBottom_toBottomOf="@+id/imgLogo"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.674"
         app:layout_constraintStart_toEndOf="@+id/imgLogo"
-        app:layout_constraintTop_toTopOf="@+id/imgLogo"
-        app:layout_constraintVertical_bias="0.615" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.075" />
 
     <ImageView
         android:id="@+id/imgLogo"
@@ -126,4 +124,5 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.1" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

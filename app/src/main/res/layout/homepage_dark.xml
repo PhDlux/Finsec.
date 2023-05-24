@@ -69,7 +69,7 @@
                 android:layout_width="61dp"
                 android:layout_height="53dp"
                 android:background="#00FFFFFF"
-                android:src="@drawable/notiflogo" />
+                android:src="@drawable/notiflogowhite" />
 
 
         </LinearLayout>

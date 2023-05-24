@@ -24,9 +24,9 @@
 
     <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/barchart"
-        android:layout_width="380dp"
+        android:layout_width="340dp"
         android:layout_height="300dp"
-        android:background="@color/white"
+        android:background="@drawable/tab_bg_dark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.516"

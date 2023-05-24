@@ -3,7 +3,6 @@ package com.example.finsec_finalfinalnajud;
 import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -30,8 +29,18 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import android.content.Context;
+
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -61,6 +70,7 @@ public class SchedulepageFragmentDark extends Fragment implements View.OnClickLi
         } else {
             Log.d(TAG, "onCreate: getArguments is null");
         }
+
     }
 
     @Override
@@ -95,6 +105,7 @@ public class SchedulepageFragmentDark extends Fragment implements View.OnClickLi
     CalendarView calendarView;
     private long lastClickTime = 0;
     private static final long DOUBLE_CLICK_TIME_DELTA = 300;
+    TextView txtExpensesNum, txtExpensesArrow, txtBudgetNum, txtBudgetArrow;
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -118,6 +129,9 @@ public class SchedulepageFragmentDark extends Fragment implements View.OnClickLi
         txtBillsFab = view.findViewById(R.id.txtFABbills);
 
         calendarView = view.findViewById(R.id.calendarView);
+
+        txtExpensesNum = view.findViewById(R.id.txtexpensesnum1);
+        txtExpensesArrow = view.findViewById(R.id.txtexpensesarrow1);
 
         addBudgetFab.setVisibility(View.GONE);
         addExpenseFab.setVisibility(View.GONE);
@@ -144,6 +158,14 @@ public class SchedulepageFragmentDark extends Fragment implements View.OnClickLi
         overlay.setOnClickListener(this);
 
         calendarView.setOnDateChangeListener(this);
+        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy", Locale.getDefault());
+        String currentDate = sdf.format(new Date());
+        setDailyExpenses(txtExpensesNum, txtExpensesArrow, currentDate);
+
+        txtBudgetNum = view.findViewById(R.id.txtbudgetnum);
+        txtBudgetArrow = view.findViewById(R.id.txtbudgetarrow);
+
+        setDailySavings(txtBudgetNum, txtBudgetArrow, currentDate);
     }
 
     @Override
@@ -215,6 +237,9 @@ public class SchedulepageFragmentDark extends Fragment implements View.OnClickLi
         }
         lastClickTime = clickTime;
         date =  String.format("%02d", i1+1) + "-" + String.format("%02d", i2) + "-" + Integer.toString(i);
+
+        setDailyExpenses(txtExpensesNum, txtExpensesArrow, date);
+        setDailySavings(txtBudgetNum, txtBudgetArrow, date);
     }
 
     private void showScheduleForDate() {
@@ -239,7 +264,7 @@ public class SchedulepageFragmentDark extends Fragment implements View.OnClickLi
         btnSchedBudget.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getContext(), DisplayScheduleDark.class);
+                Intent i = new Intent(getContext(), DisplaySchedule.class);
                 i.putExtra("schedType", "Budget");
                 i.putExtra("email", email);
                 i.putExtra("date", date);
@@ -250,7 +275,7 @@ public class SchedulepageFragmentDark extends Fragment implements View.OnClickLi
         btnSchedBills.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getContext(), DisplayScheduleDark.class);
+                Intent i = new Intent(getContext(), DisplaySchedule.class);
                 i.putExtra("schedType", "Bills");
                 i.putExtra("email", email);
                 i.putExtra("date", date);
@@ -261,7 +286,7 @@ public class SchedulepageFragmentDark extends Fragment implements View.OnClickLi
         btnSchedExpenses.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getContext(), DisplayScheduleDark.class);
+                Intent i = new Intent(getContext(), DisplaySchedule.class);
                 i.putExtra("schedType", "Expenses");
                 i.putExtra("email", email);
                 i.putExtra("date", date);
@@ -395,6 +420,96 @@ public class SchedulepageFragmentDark extends Fragment implements View.OnClickLi
         });
     }
 
+    private void setDailySavings(TextView txtSavingsNum, TextView txtSavingsArrow, String date) {
+        if (email == null) {
+            Log.e(TAG, "email3 is null");
+            return;
+        }
+
+        DatabaseReference userRef = dbFinsec.child("users").child(email).child("Schedule").child("Budget").child(date);
+        userRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                double totalSavings = 0;
+                for (DataSnapshot goalSnapshot : snapshot.getChildren()) {
+                    if (goalSnapshot.child("samount").getValue() != null) {
+                        String amount = goalSnapshot.child("samount").getValue(String.class);
+
+                        double savings = 0;
+                        try {
+                            savings = Double.parseDouble(amount);
+                        } catch (NumberFormatException e) {
+                            Log.e(TAG, "Failed to parse savings for date " + date);
+                        }
+
+                        totalSavings += savings;
+                    } else {
+                        Log.e(TAG, "Null value for savings for date " + date);
+                    }
+                }
+
+                NumberFormat n = NumberFormat.getInstance();
+                n.setMaximumFractionDigits(2);
+                n.setMinimumFractionDigits(2);
+                txtSavingsNum.setText(String.format("₱ " + n.format(totalSavings)));
+                if (totalSavings > 0) {
+                    txtSavingsArrow.setText("⬆");
+                } else {
+                    txtSavingsArrow.setText("-");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Handle error...
+            }
+        });
+    }
+    private void setDailyExpenses(TextView txtExpensesNum, TextView txtExpensesArrow, String date) {
+        if (email == null) {
+            Log.e(TAG, "email3 is null");
+            return;
+        }
+
+        DatabaseReference userRef = dbFinsec.child("users").child(email).child(date);
+        userRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                double totalExpenses = 0;
+                for (DataSnapshot expenseSnapshot : snapshot.child("Expenses").getChildren()) {
+                    if (expenseSnapshot.child("expense").getValue() != null) {
+                        String expenseStr = expenseSnapshot.child("expense").getValue(String.class);
+
+                        double expense = 0;
+                        try {
+                            expense = Double.parseDouble(expenseStr);
+                        } catch (NumberFormatException e) {
+                            Log.e(TAG, "Failed to parse expense for date " + date);
+                        }
+
+                        totalExpenses += expense;
+                    } else {
+                        Log.e(TAG, "Null value for expense for date " + date);
+                    }
+                }
+
+                NumberFormat n = NumberFormat.getInstance();
+                n.setMaximumFractionDigits(2);
+                n.setMinimumFractionDigits(2);
+                txtExpensesNum.setText(String.format("₱ " + n.format(totalExpenses)));
+                if (totalExpenses > 0) {
+                    txtExpensesArrow.setText("⬆");
+                } else {
+                    txtExpensesArrow.setText("-");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Handle error...
+            }
+        });
+    }
     private void commonDialogConfig(Dialog dialog){
         if (email == null) {
             Log.e(TAG, "email3 is null");
@@ -408,4 +523,3 @@ public class SchedulepageFragmentDark extends Fragment implements View.OnClickLi
         dialog.getWindow().setGravity(Gravity.BOTTOM);
     }
 }
-

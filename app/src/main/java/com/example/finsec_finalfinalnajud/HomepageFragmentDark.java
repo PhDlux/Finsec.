@@ -2,6 +2,7 @@ package com.example.finsec_finalfinalnajud;
 
 import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -17,6 +18,10 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -27,9 +32,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -43,6 +51,13 @@ public class HomepageFragmentDark extends Fragment {
     private DatabaseReference dbFinsec;
     private String email3;
 
+    public static HomepageFragmentDark newInstance(String email) {
+        HomepageFragmentDark fragment = new HomepageFragmentDark();
+        Bundle args = new Bundle();
+        args.putString("encodedEmail", email);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -77,15 +92,13 @@ public class HomepageFragmentDark extends Fragment {
             String encodedEmail = arguments.getString("encodedEmail");
             if (encodedEmail != null) {
                 email3 = encodedEmail;
+
+                storeBills();
             }
         }
 
         notificationContainer = view.findViewById(R.id.notif_list);
         ImageButton btnNotif = view.findViewById(R.id.imgbtnnotif);
-
-        notifications.add(new Pair<>("Electric Bill", "₱ 200.00"));
-        notifications.add(new Pair<>("Water Bill", "₱ 180.13"));
-        notifications.add(new Pair<>("Wi-Fi", "₱ 1,799.00"));
 
         ImageButton btnFrame = view.findViewById(R.id.imgbtntotalsavings);
         ImageButton btnFrame1 = view.findViewById(R.id.imgbtnexpenses);
@@ -113,7 +126,7 @@ public class HomepageFragmentDark extends Fragment {
             @Override
             public void onClick(View view) {
                 if(getArguments() != null){
-                    Intent i = new Intent(getActivity(), GoalSavingsDark.class);
+                    Intent i = new Intent(getActivity(), GoalSavings.class);
                     i.putExtra("email2", getArguments().getString("encodedEmail"));
                     i.putExtra("currentDate", dateTextView.getText().toString().substring(6));
                     startActivity(i);
@@ -125,7 +138,7 @@ public class HomepageFragmentDark extends Fragment {
             @Override
             public void onClick(View view) {
                 if(getArguments() != null){
-                    Intent i = new Intent(getActivity(), ExpensePageDark.class);
+                    Intent i = new Intent(getActivity(), ExpensePage.class);
                     i.putExtra("email2", getArguments().getString("encodedEmail"));
                     i.putExtra("currentDate", dateTextView.getText().toString().substring(6));
                     startActivity(i);
@@ -141,14 +154,71 @@ public class HomepageFragmentDark extends Fragment {
         });
     }
 
-    public static HomepageFragmentDark newInstance(String email) {
-        HomepageFragmentDark fragment = new HomepageFragmentDark();
-        Bundle args = new Bundle();
-        args.putString("encodedEmail", email);
-        fragment.setArguments(args);
-        return fragment;
+
+    private String getCurrentDate() {
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH) + 1; // Adding 1 because Calendar.MONTH is zero-based
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        // Format the date as "MM-dd-yyyy"
+        return String.format(Locale.getDefault(), "%02d-%02d-%04d", month, day, year);
     }
 
+    private String formatAmount(String amount) {
+        try {
+            double value = Double.parseDouble(amount);
+
+            // Format the amount as "₱ x,xxx.xx"
+            DecimalFormat decimalFormat = new DecimalFormat("₱ #,###.00");
+            return decimalFormat.format(value);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            return amount; // Return the original amount if parsing fails
+        }
+    }
+
+    private void storeBills() {
+        dbFinsec.child("users").child(email3).child("Schedule").child("Bills").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String currentDate = getCurrentDate(); // Replace getCurrentDate() with the method to get the current date in the desired format
+                System.out.println(currentDate);
+                for (DataSnapshot dateSnapshot : snapshot.getChildren()) {
+                    String date = dateSnapshot.getKey();
+
+                    System.out.println(date);
+                    if (date.equals(currentDate)) {
+                        for (DataSnapshot timestampSnapshot : dateSnapshot.getChildren()) {
+                            String timestamp = timestampSnapshot.getKey();
+                            String amount = timestampSnapshot.child("samount").getValue(String.class);
+                            String budget = timestampSnapshot.child("sbudget").getValue(String.class);
+
+                            // Format the amount as "₱ x,xxx.xx"
+                            String formattedAmount;
+                            if(amount != null && budget != null) {
+                                formattedAmount = formatAmount(amount);
+                            } else {
+                                continue;
+                            }
+
+
+                            // Create a Pair and add it to the notifications list
+                            Pair<String, String> notification = new Pair<>(budget, formattedAmount);
+                            notifications.add(notification);
+                        }
+                    }
+                }
+
+                // The notifications list now contains the bills for the current date
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Handle any errors
+            }
+        });
+    }
     private void addAllNotifications() {
         final Handler handler = new Handler();
         for (int i = 0; i < notifications.size(); i++) {
@@ -383,6 +453,4 @@ public class HomepageFragmentDark extends Fragment {
             }
         });
     }
-
-
 }

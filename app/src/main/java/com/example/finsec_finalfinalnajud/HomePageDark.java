@@ -1,5 +1,11 @@
 package com.example.finsec_finalfinalnajud;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,11 +16,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import java.util.HashMap;
 
@@ -59,11 +60,9 @@ public class HomePageDark extends AppCompatActivity {
 
         String em = getIntent().getStringExtra("email");
         HomepageFragmentDark hp = HomepageFragmentDark.newInstance(em);
-        SchedulepageFragmentDark sp = SchedulepageFragmentDark.newInstance(em);
 
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.add(R.id.fragmentContainer, hp);
-        ft.commit();
+
+        switchFragment(1, hp.getClass(), em);
 
         fragmentMap.put(1, hp);
 
@@ -103,7 +102,7 @@ public class HomePageDark extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(selectedTab != 2) {
-                    switchFragment(2, sp.getClass(), em);
+                    switchFragment(2, SchedulepageFragment.class, em);
                     txtHome.setVisibility(View.GONE);
                     txtCalcu.setVisibility(View.GONE);
                     txtAdvisor.setVisibility(View.GONE);
@@ -135,7 +134,7 @@ public class HomePageDark extends AppCompatActivity {
             public void onClick(View view) {
                 if(selectedTab != 3) {
 
-                    switchFragment(3, CalculatorpageFragmentDark.class, em);
+                    switchFragment(3, CalculatorpageFragment.class, em);
 
                     txtHome.setVisibility(View.GONE);
                     txtSched.setVisibility(View.GONE);
@@ -167,7 +166,7 @@ public class HomePageDark extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(selectedTab != 4) {
-                    switchFragment(4, AdvisorpageFragmentDark.class, em);
+                    switchFragment(4, AdvisorpageFragment.class, em);
 
                     txtHome.setVisibility(View.GONE);
                     txtSched.setVisibility(View.GONE);
@@ -209,8 +208,8 @@ public class HomePageDark extends AppCompatActivity {
             try {
                 if (fragmentClass == HomepageFragmentDark.class) {
                     newFragment = HomepageFragmentDark.newInstance(email);
-                } else if (fragmentClass == SchedulepageFragmentDark.class) {
-                    newFragment = SchedulepageFragmentDark.newInstance(email);
+                } else if (fragmentClass == SchedulepageFragment.class) {
+                    newFragment = SchedulepageFragment.newInstance(email);
                 } else {
                     newFragment = fragmentClass.newInstance();
                 }
@@ -231,5 +230,4 @@ public class HomePageDark extends AppCompatActivity {
         return darkness >= 0.5;
     }
 }
-
 

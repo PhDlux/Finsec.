@@ -35,12 +35,13 @@
             android:id="@+id/layoutBillsName"
             android:layout_width="match_parent"
             android:layout_height="48dp"
+            android:backgroundTint="@color/white"
             android:ems="10"
             android:fontFamily="@font/nunitosans"
             android:hint="Bill Name"
             android:inputType="textPersonName"
-            android:textColorHint="#FFFFFF"
-            android:backgroundTint="@color/white"/>
+            android:textColor="#FFFFFF"
+            android:textColorHint="#FFFFFF" />
 
     </LinearLayout>
 
@@ -61,12 +62,13 @@
             android:id="@+id/layoutAmount"
             android:layout_width="match_parent"
             android:layout_height="48dp"
+            android:backgroundTint="@color/white"
             android:ems="10"
             android:fontFamily="@font/nunitosans"
             android:hint="Amount"
             android:inputType="numberDecimal"
-            android:textColorHint="#FFFFFF"
-            android:backgroundTint="@color/white"/>
+            android:textColor="#FFFFFF"
+            android:textColorHint="#FFFFFF" />
 
     </LinearLayout>
 
@@ -87,12 +89,13 @@
             android:id="@+id/layoutDate"
             android:layout_width="match_parent"
             android:layout_height="48dp"
+            android:backgroundTint="@color/white"
             android:ems="10"
             android:fontFamily="@font/nunitosans"
             android:hint="Date"
             android:inputType="textPersonName"
-            android:textColorHint="#FFFFFF"
-            android:backgroundTint="@color/white"/>
+            android:textColor="#FFFFFF"
+            android:textColorHint="#FFFFFF" />
 
     </LinearLayout>
 
@@ -113,13 +116,14 @@
             android:id="@+id/layoutDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:backgroundTint="@color/white"
             android:fontFamily="@font/nunitosans"
+            android:gravity="top"
             android:hint="Description"
             android:inputType="textMultiLine"
             android:minLines="4"
-            android:gravity="top"
-            android:textColorHint="#FFFFFF"
-            android:backgroundTint="@color/white"/>
+            android:textColor="#FFFFFF"
+            android:textColorHint="#FFFFFF" />
 
     </LinearLayout>
 

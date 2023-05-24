@@ -122,7 +122,7 @@
                 android:layout_height="120dp"
                 android:layout_marginBottom="200dp"
                 android:background="#00FFFFFF"
-                android:drawableTop="@drawable/ic_add"
+                android:drawableTop="@drawable/goaladddark"
                 android:text=" "
                 android:textColor="#00FFFFFF" />
         </LinearLayout>
@@ -151,7 +151,7 @@
         android:fontFamily="@font/nunitobold"
         android:gravity="center"
         android:text="Month of June"
-        android:textColor="#FFFFFF"
+        android:textColor="#00FFFFFF"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="@+id/textView"
         app:layout_constraintEnd_toEndOf="parent"
@@ -166,7 +166,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/nunitobold"
         android:text="+10%"
-        android:textColor="#FFFFFF"
+        android:textColor="#00FFFFFF"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

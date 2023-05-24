@@ -31,7 +31,7 @@
             android:layout_width="331dp"
             android:layout_height="54dp"
             android:textAlignment="textEnd"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="32dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

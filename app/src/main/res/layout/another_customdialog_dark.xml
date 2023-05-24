@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:background="@color/black"
+    android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -15,9 +15,7 @@
         android:ems="10"
         android:fontFamily="@font/nunitosans"
         android:hint="Goal Name"
-        android:inputType="textPersonName"
-        android:textColorHint="#FFFFFF"
-        android:backgroundTint="@color/white"/>
+        android:inputType="textPersonName" />
 
     <EditText
         android:id="@+id/layoutAmount"
@@ -26,7 +24,5 @@
         android:ems="10"
         android:fontFamily="@font/nunitosans"
         android:hint="Savings"
-        android:inputType="numberDecimal"
-        android:textColorHint="#FFFFFF"
-        android:backgroundTint="@color/white"/>
+        android:inputType="numberDecimal" />
 </LinearLayout>

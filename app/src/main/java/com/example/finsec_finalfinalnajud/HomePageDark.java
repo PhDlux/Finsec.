@@ -30,7 +30,7 @@ public class HomePageDark extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_page_dark);
 
-        int backgroundColor = Color.parseColor("#F1F1F1");
+        int backgroundColor = Color.parseColor("#222222");
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
